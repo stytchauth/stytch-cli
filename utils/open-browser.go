@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 )
@@ -18,8 +20,10 @@ func OpenBrowser(url string) {
 	default: // Linux and others
 		cmd = "xdg-open"
 	}
-	if cmd != "" {
-		args = append([]string{url}, args...)
-		exec.Command(cmd, args...).Start()
+	args = append([]string{url}, args...)
+	err := exec.Command(cmd, args...).Start()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
 	}
 }

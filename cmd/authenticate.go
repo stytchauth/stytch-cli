@@ -57,8 +57,13 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Printf("✅ Received code: %s\n", code)
 
-	respBody := getAccessTokenFromCode(code)
-	fmt.Printf("Response: %s\n", respBody)
+	accessToken := getAccessTokenFromCode(code)
+	fmt.Printf("access token: %s\n", accessToken)
+	// Save the access token securely
+	err := utils.SaveToken(accessToken)
+	if err != nil {
+		panic(err)
+	}
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)
@@ -68,6 +73,10 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 		log.Println("Shutting down CLI after receiving code")
 		os.Exit(0) // Uncomment if you want it to exit
 	}()
+}
+
+type GetAccessTokenResp struct {
+	AccessToken string `json:"access_token"`
 }
 
 func getAccessTokenFromCode(code string) string {
@@ -108,11 +117,12 @@ func getAccessTokenFromCode(code string) string {
 	}(resp.Body)
 
 	// Read and print the response
-	respBody, err := io.ReadAll(resp.Body)
+	getAccessTokenResp := &GetAccessTokenResp{}
+	err = json.NewDecoder(resp.Body).Decode(getAccessTokenResp)
 	if err != nil {
 		panic(err)
 	}
 
 	fmt.Printf("Status: %s\n", resp.Status)
-	return string(respBody)
+	return getAccessTokenResp.AccessToken
 }

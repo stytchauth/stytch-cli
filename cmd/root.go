@@ -1,10 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
-	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 
 	project "github.com/stytchauth/stytch-cli/cmd/projects"
@@ -15,13 +11,6 @@ func NewRootCommand() *cobra.Command {
 	var command = &cobra.Command{
 		Use:   "stytch-cli",
 		Short: "A brief description of your application",
-		PersistentPreRun: func(cmd *cobra.Command, args []string) {
-			err := godotenv.Load()
-			if err != nil {
-				fmt.Println("Error loading .env file")
-				os.Exit(1)
-			}
-		},
 	}
 
 	command.AddCommand(project.NewRootCommand())

@@ -1,7 +1,11 @@
 package internal
 
 import (
-	"github.com/stytchauth/stytch-management-go/pkg/api"
+	"log"
+
+	"github.com/stytchauth/stytch-management-go/v2/pkg/api"
+
+	"github.com/stytchauth/stytch-cli/utils"
 )
 
 var client *api.API
@@ -11,5 +15,9 @@ func SetDefaultMangoClient(c *api.API) {
 }
 
 func GetDefaultMangoClient() *api.API {
-	return client
+	token, err := utils.LoadToken()
+	if err != nil {
+		log.Fatal("Unable to load access token: ", err)
+	}
+	return api.NewAccessTokenClient(token)
 }

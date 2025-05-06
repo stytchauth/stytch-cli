@@ -59,6 +59,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 
 	accessToken := getAccessTokenFromCode(code)
 	fmt.Printf("access token: %s\n", accessToken)
+
 	// Save the access token securely
 	err := utils.SaveToken(accessToken)
 	if err != nil {

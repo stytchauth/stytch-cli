@@ -3,8 +3,10 @@
 
 To run commands:
 - Set your workspace key id and secret in .env
-- Run `go build -o ~/go/bin/stytch-cli` (ensure $HOME/go/bin is in your $PATH)
+- Run `bash install.sh`
 - Use `stytch-cli <command>`
 - Available commands:
   - `version` - prints version
-  - `create-b2b-project` - creates a new project in your workspace
+  - `authenticate` - authenticate via connected apps, and store your access token locally
+  - `project <command>`
+    - `project create -v <vertical> -n <name>`

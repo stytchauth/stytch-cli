@@ -1,4 +1,4 @@
-module stytch-cli
+module github.com/stytchauth/stytch-cli
 
 go 1.24.1
 

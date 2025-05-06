@@ -8,7 +8,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"stytch-cli/utils"
+
+	"github.com/stytchauth/stytch-cli/utils"
 
 	"github.com/spf13/cobra"
 )

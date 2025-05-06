@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"log"
 	"net/http"
 	"os/exec"
 	"runtime"
+
+	"github.com/spf13/cobra"
 )
 
 const PORT = ":5001"
@@ -16,18 +17,27 @@ var authenticateCmd = &cobra.Command{
 	Short: "Start authentication flow via Stytch",
 	Run: func(cmd *cobra.Command, args []string) {
 		// Start local server
-		http.HandleFunc("/", handleCallback)
+		http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path == "/" {
+				handleCallback(w, r)
+			} else {
+				http.NotFound(w, r)
+			}
+		})
 
-		fmt.Printf("Listening on http://127.0.0.1%s/\n", PORT)
-		if err := http.ListenAndServe("127.0.0.1"+PORT, nil); err != nil {
-			log.Fatalf("Failed to start server: %v", err)
-		}
+		go func() {
+			fmt.Printf("Listening on http://127.0.0.1%s/\n", PORT)	
+			if err := http.ListenAndServe("127.0.0.1"+PORT, nil); err != nil {
+				log.Fatalf("Failed to start server: %v", err)
+			}
+		}()
 
 		// Build the authentication URL (replace this with your actual URL from Stytch)
 		authURL := "https://ollie.dev.stytch.com/idp?response_type=code&client_id=connected-app-live-d552cc32-a785-4371-bf85-0af85f5f7067&redirect_uri=http://127.0.0.1:5001&code_challenge=47DEQpj8HBSa-_TImW-5JCeuQeRkm5NMpJWZG3hSuFU&code_verifier=cbQ0SS1rHryO9V_xKa26myrXwamsWnBQw7NPp6SIu_Y"
 
 		// Open browser
 		openBrowser(authURL)
+		fmt.Println("OPENING BROWSER")
 
 		// Keep the program running
 		select {}

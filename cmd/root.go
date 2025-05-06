@@ -1,7 +1,8 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
+	"os"
 	project "stytch-cli/cmd/projects"
 
 	"github.com/joho/godotenv"
@@ -16,7 +17,8 @@ func NewRootCommand() *cobra.Command {
 		PersistentPreRun: func(cmd *cobra.Command, args []string) {
 			err := godotenv.Load()
 			if err != nil {
-				log.Fatal("Error loading .env file")
+				fmt.Println("Error loading .env file")
+				os.Exit(1)
 			}
 		},
 	}
@@ -26,8 +28,4 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(NewAuthenticateCommand())
 
 	return command
-}
-
-func init() {
-	// TODO: Add flags
 }

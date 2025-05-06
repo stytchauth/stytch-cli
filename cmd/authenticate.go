@@ -71,7 +71,7 @@ func getAccessTokenFromCode(code string) string {
 	tokenUrl := fmt.Sprintf("https://api.ollie.dev.stytch.com/v1/public/%s/oauth2/token", ProjectId)
 	requestBody := map[string]interface{}{
 		"client_id":     ClientId,
-		"redirect_uri":  fmt.Sprintf("http://%s/", PortUrl),
+		"redirect_uri":  fmt.Sprintf("http://%s", PortUrl),
 		"grant_type":    "authorization_code",
 		"code":          code,
 		"code_verifier": CodeVerifier,
@@ -81,6 +81,7 @@ func getAccessTokenFromCode(code string) string {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("Request body: %s\n", string(bodyBytes))
 
 	// Make the HTTP request
 	req, err := http.NewRequest("POST", tokenUrl, bytes.NewBuffer(bodyBytes))

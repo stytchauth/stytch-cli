@@ -19,28 +19,32 @@ const CodeChallenge = "dcvJOywUwb5HOWOyhmOI5dSc4_VHQU8Xkp9bXD-tGWI"
 const CodeVerifier = "00afa9f459ce29bd4f9cd89f3a26036c3a2a772abd929e3fe179cb41"
 const ProjectId = "project-live-0f74ccf8-79bd-4096-bd3f-5317c0e69a3b"
 
-var authenticateCmd = &cobra.Command{
-	Use:   "authenticate",
-	Short: "Start authentication flow via Stytch",
-	Run: func(cmd *cobra.Command, args []string) {
-		http.HandleFunc("/", handleCallback)
+func NewAuthenticateCommand() *cobra.Command {
+	command := &cobra.Command{
+		Use:   "authenticate",
+		Short: "Start authentication flow via Stytch",
+		Run: func(cmd *cobra.Command, args []string) {
+			http.HandleFunc("/", handleCallback)
 
-		go func() {
-			fmt.Printf("Listening on http://%s/\n", PortUrl)
-			if err := http.ListenAndServe(PortUrl, nil); err != nil {
-				log.Fatalf("Failed to start server: %v", err)
-			}
-		}()
+			go func() {
+				fmt.Printf("Listening on http://%s/\n", PortUrl)
+				if err := http.ListenAndServe(PortUrl, nil); err != nil {
+					log.Fatalf("Failed to start server: %v", err)
+				}
+			}()
 
-		// Build the authentication URL
-		authURL := fmt.Sprintf("https://ollie.dev.stytch.com/idp?response_type=code&client_id=%s&redirect_uri=http://%s&code_challenge=%s&code_verifier=%s", ClientId, PortUrl, CodeChallenge, CodeVerifier)
+			// Build the authentication URL
+			authURL := fmt.Sprintf("https://ollie.dev.stytch.com/idp?response_type=code&client_id=%s&redirect_uri=http://%s&code_challenge=%s&code_verifier=%s", ClientId, PortUrl, CodeChallenge, CodeVerifier)
 
-		// Open browser
-		utils.OpenBrowser(authURL)
+			// Open browser
+			utils.OpenBrowser(authURL)
 
-		// Keep the program running
-		select {}
-	},
+			// Keep the program running
+			select {}
+		},
+	}
+
+	return command
 }
 
 func handleCallback(w http.ResponseWriter, r *http.Request) {
@@ -110,8 +114,4 @@ func getAccessTokenFromCode(code string) string {
 
 	fmt.Printf("Status: %s\n", resp.Status)
 	return string(respBody)
-}
-
-func init() {
-	rootCmd.AddCommand(authenticateCmd)
 }

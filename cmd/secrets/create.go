@@ -5,8 +5,9 @@ import (
 	"log"
 
 	"github.com/spf13/cobra"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/secrets"
+
 	"github.com/stytchauth/stytch-cli/cmd/internal"
-	"github.com/stytchauth/stytch-management-go/pkg/models/secrets"
 )
 
 func NewCreateCommand() *cobra.Command {

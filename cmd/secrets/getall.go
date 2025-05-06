@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/stytchauth/stytch-cli/cmd/internal"
-	"github.com/stytchauth/stytch-management-go/pkg/models/secrets"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/secrets"
 )
 
 func NewGetAllCommand() *cobra.Command {

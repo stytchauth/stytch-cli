@@ -3,7 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
-	project "stytch-cli/cmd/projects"
+
+	project "github.com/stytchauth/stytch-cli/cmd/projects"
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"

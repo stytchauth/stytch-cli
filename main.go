@@ -6,7 +6,8 @@ package main
 import (
 	"log/slog"
 	"os"
-	"stytch-cli/cmd"
+
+	"github.com/stytchauth/stytch-cli/cmd"
 )
 
 func main() {

@@ -1,9 +1,7 @@
 package cmd
 
 import (
-	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -18,10 +16,7 @@ import (
 )
 
 const (
-	PortUrl   = "127.0.0.1:5001"
-	ClientId  = "connected-app-live-d552cc32-a785-4371-bf85-0af85f5f7067"
-	ProjectId = "project-live-0f74ccf8-79bd-4096-bd3f-5317c0e69a3b"
-	Scopes    = "openid email profile project"
+	Scopes = "openid email profile project offline_access"
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -41,12 +36,12 @@ func NewAuthenticateCommand() *cobra.Command {
 			})
 
 			server := &http.Server{
-				Addr:              PortUrl,
+				Addr:              utils.PortUrl,
 				Handler:           mux,
 				ReadHeaderTimeout: 1 * time.Second,
 			}
 			go func() {
-				fmt.Printf("Listening on http://%s/\n", PortUrl)
+				fmt.Printf("Listening on http://%s/\n", utils.PortUrl)
 				if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 					fmt.Printf("Server error: %v\n", err)
 					panic(err)
@@ -58,8 +53,8 @@ func NewAuthenticateCommand() *cobra.Command {
 
 			params := u.Query()
 			params.Add("response_type", "code")
-			params.Add("client_id", ClientId)
-			params.Add("redirect_uri", fmt.Sprintf("http://%s", PortUrl))
+			params.Add("client_id", utils.ClientId)
+			params.Add("redirect_uri", fmt.Sprintf("http://%s", utils.PortUrl))
 			params.Add("code_verifier", verifier)
 			params.Add("code_challenge", challenge)
 			params.Add("scope", Scopes)
@@ -90,55 +85,9 @@ func handleCallback(w http.ResponseWriter, r *http.Request, pkceVerifier string)
 	}
 	fmt.Printf("✅ Received code: %s\n", code)
 
-	accessToken := getAccessTokenFromCode(code, pkceVerifier)
-	// Save the access token securely
-	err := utils.SaveToken(accessToken)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println("✅ Access token saved")
+	// Exchange the code for an access token & save it
+	utils.GetAccessTokenFromCode(code, pkceVerifier)
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)
-}
-
-type GetAccessTokenResp struct {
-	AccessToken string `json:"access_token"`
-}
-
-func getAccessTokenFromCode(code string, pkceVerifier string) string {
-	// make request to stytch with code to get access token
-	// store the access token/refresh token locally
-	tokenUrl := fmt.Sprintf("https://api.ollie.dev.stytch.com/v1/public/%s/oauth2/token", ProjectId)
-	requestBody := map[string]interface{}{
-		"client_id":     ClientId,
-		"redirect_uri":  fmt.Sprintf("http://%s", PortUrl),
-		"grant_type":    "authorization_code",
-		"code":          code,
-		"code_verifier": pkceVerifier,
-	}
-
-	bodyBytes, err := json.Marshal(requestBody)
-	if err != nil {
-		log.Fatalf("Unable to marshal auth code request to JSON: %v", err)
-	}
-
-	// Make the HTTP request
-	req, _ := http.NewRequest("POST", tokenUrl, bytes.NewBuffer(bodyBytes))
-	req.Header.Set("Content-Type", "application/json")
-
-	client := &http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Fatalf("Error exchanging auth code: %v", err)
-	}
-	defer resp.Body.Close()
-
-	// Read and print the response
-	var getAccessTokenResp GetAccessTokenResp
-	if err := json.NewDecoder(resp.Body).Decode(&getAccessTokenResp); err != nil {
-		log.Fatalf("Error decoding access token response: %v", err)
-	}
-
-	return getAccessTokenResp.AccessToken
 }

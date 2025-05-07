@@ -43,13 +43,7 @@ func NewCreateCommand() *cobra.Command {
 	}
 	createCommand.Flags().StringVarP(&vertical, "vertical", "v", "", "The vertical of the project")
 	createCommand.Flags().StringVarP(&projectName, "name", "n", "", "The name of the project")
-	var errors []error
-	errors = append(errors, createCommand.MarkFlagRequired("vertical"))
-	errors = append(errors, createCommand.MarkFlagRequired("name"))
-	if len(errors) > 0 {
-		for _, err := range errors {
-			log.Fatalf("Error marking flag required: %v", err)
-		}
-	}
+	_ = createCommand.MarkFlagRequired("vertical")
+	_ = createCommand.MarkFlagRequired("name")
 	return createCommand
 }

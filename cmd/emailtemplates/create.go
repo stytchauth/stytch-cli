@@ -38,14 +38,8 @@ func NewCreateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&templateID, "template-id", "t", "", "The email template ID")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "The name of the email template")
-	var errors []error
-	errors = append(errors, cmd.MarkFlagRequired("project-id"))
-	errors = append(errors, cmd.MarkFlagRequired("template-id"))
-	errors = append(errors, cmd.MarkFlagRequired("name"))
-	if len(errors) > 0 {
-		for _, err := range errors {
-			log.Fatalf("Error marking flag required: %v", err)
-		}
-	}
+	_ = cmd.MarkFlagRequired("project-id")
+	_ = cmd.MarkFlagRequired("template-id")
+	_ = cmd.MarkFlagRequired("name")
 	return cmd
 }

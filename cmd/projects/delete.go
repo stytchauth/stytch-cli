@@ -32,9 +32,6 @@ func NewDeleteCommand() *cobra.Command {
 		},
 	}
 	deleteCommand.Flags().StringVarP(&projectID, "id", "i", "", "The ID of the project to delete")
-	err := deleteCommand.MarkFlagRequired("id")
-	if err != nil {
-		log.Fatalf("Error marking project-id flag required: %v", err)
-	}
+	_ = deleteCommand.MarkFlagRequired("id")
 	return deleteCommand
 }

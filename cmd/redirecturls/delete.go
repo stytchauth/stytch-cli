@@ -32,13 +32,8 @@ func NewDeleteCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL to delete")
-	var errors []error
-	errors = append(errors, cmd.MarkFlagRequired("project-id"))
-	errors = append(errors, cmd.MarkFlagRequired("url"))
-	if len(errors) > 0 {
-		for _, err := range errors {
-			log.Fatalf("Error marking flag required: %v", err)
-		}
-	}
+	_ = cmd.MarkFlagRequired("project-id")
+	_ = cmd.MarkFlagRequired("url")
+
 	return cmd
 }

@@ -30,10 +30,6 @@ func NewGetAllCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-	err := cmd.MarkFlagRequired("project-id")
-	if err != nil {
-		log.Fatalf("Error marking project-id flag required: %v", err)
-	}
-
+	_ = cmd.MarkFlagRequired("project-id")
 	return cmd
 }

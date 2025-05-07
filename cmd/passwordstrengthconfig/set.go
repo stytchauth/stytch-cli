@@ -54,14 +54,7 @@ func NewSetCommand() *cobra.Command {
 	cmd.Flags().IntVarP(&ludsMinPasswordLength, "luds-min-password-length", "m", 0, "Minimum password length for LUDS policy")
 	cmd.Flags().IntVarP(&ludsMinPasswordComplexity, "luds-min-password-complexity", "x", 0, "Minimum password complexity for LUDS policy")
 
-	var errors []error
-	errors = append(errors, cmd.MarkFlagRequired("project-id"))
-	errors = append(errors, cmd.MarkFlagRequired("validation-policy"))
-	if len(errors) > 0 {
-		for _, err := range errors {
-			log.Fatalf("Error marking flag required: %v", err)
-		}
-	}
-
+	_ = cmd.MarkFlagRequired("project-id")
+	_ = cmd.MarkFlagRequired("validation-policy")
 	return cmd
 }

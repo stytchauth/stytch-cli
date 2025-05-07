@@ -46,15 +46,9 @@ func NewCreateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL to create")
 	cmd.Flags().StringVarP(&redirectType, "redirect-type", "t", "", "The redirect type (e.g., LOGIN, SIGNUP)")
 	cmd.Flags().BoolVarP(&isDefault, "is-default", "d", false, "Whether to set this URL as the default for the given redirect type")
-	var errors []error
-	errors = append(errors, cmd.MarkFlagRequired("project-id"))
-	errors = append(errors, cmd.MarkFlagRequired("url"))
-	errors = append(errors, cmd.MarkFlagRequired("redirect-type"))
-	if len(errors) > 0 {
-		for _, err := range errors {
-			log.Fatalf("Error marking flag required: %v", err)
-		}
-	}
+	_ = cmd.MarkFlagRequired("project-id")
+	_ = cmd.MarkFlagRequired("url")
+	_ = cmd.MarkFlagRequired("redirect-type")
 
 	return cmd
 }

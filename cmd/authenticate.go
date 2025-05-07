@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	Scopes = "openid email profile project offline_access"
+	Scopes  = "openid email profile project admin:projects offline_access"
+	BaseURI = "staging.stytch.com"
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -49,8 +50,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			}()
 
 			// Build the authentication URL
-			u, _ := url.Parse("https://ollie.dev.stytch.com/oauth/authorize")
-
+			u, _ := url.Parse("https://" + BaseURI + "/oauth/authorize")
 			params := u.Query()
 			params.Add("response_type", "code")
 			params.Add("client_id", utils.ClientId)

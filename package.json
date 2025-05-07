@@ -1,6 +1,6 @@
 {
   "name": "stytch-cli",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "A CLI for performing Stytch management actions",
   "main": "index.js",
   "scripts": {
@@ -24,6 +24,6 @@
   "goBinary": {
     "name": "stytch-cli",
     "path": "./bin",
-    "url": "https://github.com/stytchauth/stytch-cli/releases/download/v{{version}}/stytch-cli_{{version}}_{{platform}}_{{arch}}.tar.gz"
+    "url": "https://github.com/stytchauth/stytch-cli/releases/download/v{{version}}/stytch-cli_{{version}}_{{platform}}_{{arch}}.zip"
   }
 }

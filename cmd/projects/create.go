@@ -3,10 +3,11 @@ package project
 import (
 	"context"
 	"fmt"
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/stytchauth/stytch-cli/cmd/internal"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
-	"log"
 )
 
 var vertical string    // for the --vertical flag
@@ -45,5 +46,7 @@ func NewCreateCommand() *cobra.Command {
 	}
 	createCommand.Flags().StringVarP(&vertical, "vertical", "v", "", "The vertical of the project")
 	createCommand.Flags().StringVarP(&projectName, "name", "n", "", "The name of the project")
+	createCommand.MarkFlagRequired("vertical")
+	createCommand.MarkFlagRequired("name")
 	return createCommand
 }

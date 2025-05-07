@@ -22,7 +22,7 @@ func NewCreateCommand() *cobra.Command {
 				log.Fatalf("Missing --project-id")
 			}
 
-			res, err := internal.GetDefaultMangoClient().Secrets.Create(context.Background(), secrets.CreateSecretRequest{
+			res, err := internal.MangoClient().Secrets.Create(context.Background(), secrets.CreateSecretRequest{
 				ProjectID: projectID,
 			})
 			if err != nil {

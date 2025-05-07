@@ -1,13 +1,13 @@
 package project
 
 import (
-	"context"
 	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
-	"github.com/stytchauth/stytch-cli/cmd/internal"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
+
+	"github.com/stytchauth/stytch-cli/cmd/internal"
 )
 
 var vertical string    // for the --vertical flag
@@ -18,19 +18,18 @@ func NewCreateCommand() *cobra.Command {
 		Use:   "create",
 		Short: "Create a new project",
 		Run: func(c *cobra.Command, args []string) {
-			client := internal.GetDefaultMangoClient()
-			ctx := context.Background()
-
 			// Send the request
 			var verticalType projects.Vertical
-			if vertical == "b2b" {
+			switch vertical {
+			case "b2b":
 				verticalType = projects.VerticalB2B
-			} else if vertical == "consumer" {
+			case "consumer":
 				verticalType = projects.VerticalConsumer
-			} else {
+			default:
 				log.Fatalf("Invalid vertical: %s", vertical)
 			}
-			res, err := client.Projects.Create(ctx, projects.CreateRequest{
+
+			res, err := internal.MangoClient().Projects.Create(c.Context(), projects.CreateRequest{
 				ProjectName: projectName,
 				Vertical:    verticalType,
 			})

@@ -21,7 +21,7 @@ func NewDeleteCommand() *cobra.Command {
 				log.Fatalf("Both --project-id and --secret-id must be provided")
 			}
 
-			res, err := internal.GetDefaultMangoClient().Secrets.Delete(context.Background(), secrets.DeleteSecretRequest{
+			res, err := internal.MangoClient().Secrets.Delete(context.Background(), secrets.DeleteSecretRequest{
 				ProjectID: projectID,
 				SecretID:  secretID,
 			})

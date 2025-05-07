@@ -21,7 +21,7 @@ func NewGetAllCommand() *cobra.Command {
 				log.Fatalf("Missing --project-id")
 			}
 
-			res, err := internal.GetDefaultMangoClient().Secrets.GetAll(context.Background(), secrets.GetAllSecretsRequest{
+			res, err := internal.MangoClient().Secrets.GetAll(context.Background(), secrets.GetAllSecretsRequest{
 				ProjectID: projectID,
 			})
 			if err != nil {

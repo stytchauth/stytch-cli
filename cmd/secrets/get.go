@@ -21,7 +21,7 @@ func NewGetCommand() *cobra.Command {
 				log.Fatalf("Both --project-id and --secret-id must be provided")
 			}
 
-			res, err := internal.GetDefaultMangoClient().Secrets.Get(context.Background(), secrets.GetSecretRequest{
+			res, err := internal.MangoClient().Secrets.Get(context.Background(), secrets.GetSecretRequest{
 				ProjectID: projectID,
 				SecretID:  secretID,
 			})

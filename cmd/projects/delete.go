@@ -17,7 +17,7 @@ func NewDeleteCommand() *cobra.Command {
 		Use:   "delete",
 		Short: "Delete a project by ID",
 		Run: func(c *cobra.Command, args []string) {
-			client := internal.GetDefaultMangoClient()
+			client := internal.MangoClient()
 			ctx := context.Background()
 
 			// Call the delete endpoint

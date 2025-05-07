@@ -14,5 +14,5 @@ var MangoClient = sync.OnceValue(func() *api.API {
 	if err != nil {
 		log.Fatal("Unable to load access token: ", err)
 	}
-	return api.NewAccessTokenClient(token, api.WithBaseURI("https://management.ollie.dev.stytch.com"))
+	return api.NewAccessTokenClient(token, api.WithBaseURI("https://management.staging.stytch.com"))
 })

@@ -35,7 +35,7 @@ $gobin/stytch-cli completion $shell >$HOME/.stytch-cli-completion.$shell
 # Check if the user's rc file sources the completion file
 if ! grep -q ".stytch-cli-completion.$shell" $HOME/.${shell}rc; then
        echo "Adding source line to .${shell}rc"
-       echo "\nsource $HOME/.stytch-cli-completion.$shell" >>$HOME/.${shell}rc
+       echo "source $HOME/.stytch-cli-completion.$shell" >>$HOME/.${shell}rc
 fi
 
 echo

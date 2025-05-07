@@ -1,3 +1,4 @@
 package internal
 
-var Version = "1.0.1"
+// Remember to also update package.json for the npm package
+var Version = "1.0.2"

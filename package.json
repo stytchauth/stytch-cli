@@ -1,0 +1,29 @@
+{
+  "name": "stytch-cli",
+  "version": "1.0.0",
+  "description": "A CLI for performing Stytch management actions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stytchauth/stytch-cli.git"
+  },
+  "author": "Stytch",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stytchauth/stytch-cli/issues"
+  },
+  "homepage": "https://github.com/stytchauth/stytch-cli#readme",
+  "dependencies": {
+    "go-npm": "^0.1.9"
+  },
+  "postinstall": "go-npm install",
+  "preuninstall": "go-npm uninstall",
+  "goBinary": {
+    "name": "stytch-cli",
+    "path": "./bin",
+    "url": "https://github.com/stytchauth/stytch-cli/releases/download/v{{version}}/stytch-cli_{{version}}_{{platform}}_{{arch}}.tar.gz"
+  }
+}

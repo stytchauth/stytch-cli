@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/url"
+	"os"
 	"slices"
 
 	"github.com/manifoldco/promptui"
@@ -52,7 +53,32 @@ func NewReactB2CSetup() *cobra.Command {
 			// Grab public token.
 			projectPublicToken := projectToken(c.Context(), projectID)
 			fmt.Printf("Public token: %s\n", projectPublicToken)
+			writeEnvFile(projectPublicToken)
 		},
+	}
+}
+
+func writeEnvFile(projectPublicToken string) {
+	fmt.Println("✍️ Writing public token to .env.local")
+	envFile := "../stytch-react-example/.env.local"
+	if _, err := os.Stat(envFile); os.IsNotExist(err) {
+		file, err := os.Create(envFile)
+		if err != nil {
+			log.Fatalf("Failed to create %s file: %v", envFile, err)
+		}
+		defer file.Close()
+		fmt.Printf("%s file created\n", envFile)
+	}
+
+	f, err := os.OpenFile(envFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		log.Fatalf("Failed to open %s file: %v", envFile, err)
+	}
+	defer f.Close()
+
+	_, err = f.WriteString("REACT_APP_STYTCH_PUBLIC_TOKEN=" + projectPublicToken + "\n")
+	if err != nil {
+		log.Fatalf("Failed to write to %s file: %v", envFile, err)
 	}
 }
 

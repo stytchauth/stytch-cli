@@ -21,7 +21,7 @@ const (
 	PortUrl   = "127.0.0.1:5001"
 	ClientId  = "connected-app-live-c48152cf-8732-4981-8fd5-e52dd989d75f"
 	ProjectId = "project-live-9a6d7e6f-d787-4ec5-8edb-e1eb5b180d77"
-	Scopes    = "openid email profile admin:projects"
+	Scopes    = "openid email profile admin:projects manage:project_settings"
 	BaseURI   = "stytch.com"
 )
 

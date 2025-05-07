@@ -19,10 +19,10 @@ import (
 
 const (
 	PortUrl   = "127.0.0.1:5001"
-	ClientId  = "connected-app-live-staging-a674c0a9-954e-4fbb-a2f9-e4ac3c98e5d4"
-	ProjectId = "project-live-staging-4460533c-81b4-43fd-9db7-5c7510ab3662"
+	ClientId  = "connected-app-live-c48152cf-8732-4981-8fd5-e52dd989d75f"
+	ProjectId = "project-live-9a6d7e6f-d787-4ec5-8edb-e1eb5b180d77"
 	Scopes    = "openid email profile admin:projects"
-	BaseURI   = "staging.stytch.com"
+	BaseURI   = "stytch.com"
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -96,7 +96,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request, pkceVerifier string)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("✅ Access token saved")
+	fmt.Println("✅ Access token saved: ", accessToken)
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)

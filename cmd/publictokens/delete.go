@@ -1,41 +1,41 @@
 package publictokens
 
 import (
-   "context"
-   "log"
+	"context"
+	"log"
 
-   "github.com/spf13/cobra"
-   "github.com/stytchauth/stytch-cli/cmd/internal"
-   "github.com/stytchauth/stytch-management-go/v2/pkg/models/publictokens"
+	"github.com/spf13/cobra"
+	"github.com/stytchauth/stytch-cli/cmd/internal"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/publictokens"
 )
 
 // NewDeleteCommand returns a cobra command for deleting a public token
 func NewDeleteCommand() *cobra.Command {
-   var projectID string
-   var token string
+	var projectID string
+	var token string
 
-   cmd := &cobra.Command{
-       Use:   "delete",
-       Short: "Delete a public token",
-       Long:  "Delete a public token for a project",
-       Run: func(c *cobra.Command, args []string) {
-           if projectID == "" || token == "" {
-               log.Fatalf("Both --project-id and --public-token must be provided")
-           }
+	cmd := &cobra.Command{
+		Use:   "delete",
+		Short: "Delete a public token",
+		Long:  "Delete a public token for a project",
+		Run: func(c *cobra.Command, args []string) {
+			if projectID == "" || token == "" {
+				log.Fatalf("Both --project-id and --public-token must be provided")
+			}
 
-           res, err := internal.GetDefaultMangoClient().PublicTokens.Delete(
-               context.Background(), publictokens.DeleteRequest{ProjectID: projectID, PublicToken: token},
-           )
-           if err != nil {
-               log.Fatalf("Delete public token: %s", err)
-           }
+			res, err := internal.GetDefaultMangoClient().PublicTokens.Delete(
+				context.Background(), publictokens.DeleteRequest{ProjectID: projectID, PublicToken: token},
+			)
+			if err != nil {
+				log.Fatalf("Delete public token: %s", err)
+			}
 
-           internal.PrintJSON(res)
-       },
-   }
+			internal.PrintJSON(res)
+		},
+	}
 
-   cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-   cmd.Flags().StringVarP(&token, "public-token", "t", "", "The public token to delete")
+	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
+	cmd.Flags().StringVarP(&token, "public-token", "t", "", "The public token to delete")
 
-   return cmd
+	return cmd
 }

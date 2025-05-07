@@ -26,7 +26,7 @@ func NewAuthenticateCommand() *cobra.Command {
 		Short: "Start authentication flow via Stytch",
 		Run: func(cmd *cobra.Command, args []string) {
 			stop := make(chan struct{})
-			
+
 			mux := http.NewServeMux()
 			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 				handleCallback(w, r)

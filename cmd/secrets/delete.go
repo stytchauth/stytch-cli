@@ -33,8 +33,8 @@ func NewDeleteCommand() *cobra.Command {
 		},
 	}
 
-   cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-   cmd.Flags().StringVarP(&secretID, "secret-id", "s", "", "The secret ID")
+	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
+	cmd.Flags().StringVarP(&secretID, "secret-id", "s", "", "The secret ID")
 
 	return cmd
 }

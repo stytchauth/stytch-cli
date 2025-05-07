@@ -14,7 +14,7 @@ import (
 
 func NewRootCommand() *cobra.Command {
 	// rootCmd represents the base command when called without any subcommands
-	var command = &cobra.Command{
+	command := &cobra.Command{
 		Use:   "stytch-cli",
 		Short: "A brief description of your application",
 	}

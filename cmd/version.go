@@ -4,16 +4,15 @@ import (
 	"fmt"
 
 	"github.com/spf13/cobra"
+	"github.com/stytchauth/stytch-cli/cmd/internal"
 )
-
-var Version = "1.0.0"
 
 func NewVersionCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
 		Short: "Print the version number",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("stytch-cli v" + Version)
+			fmt.Println("stytch-cli v" + internal.Version)
 		},
 	}
 }

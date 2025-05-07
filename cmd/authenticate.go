@@ -9,6 +9,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"time"
 
 	"github.com/stytchauth/stytch-cli/cmd/internal"
 	"github.com/stytchauth/stytch-cli/utils"
@@ -40,8 +41,9 @@ func NewAuthenticateCommand() *cobra.Command {
 			})
 
 			server := &http.Server{
-				Addr:    PortUrl,
-				Handler: mux,
+				Addr:              PortUrl,
+				Handler:           mux,
+				ReadHeaderTimeout: 1 * time.Second,
 			}
 			go func() {
 				fmt.Printf("Listening on http://%s/\n", PortUrl)

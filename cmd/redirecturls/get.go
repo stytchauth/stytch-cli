@@ -19,7 +19,7 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve details about a redirect URL",
 		Long:  "Retrieve details about a redirect URL for a project",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().RedirectURLs.Get(
+			res, err := internal.MangoClient().RedirectURLs.Get(
 				context.Background(), redirecturls.GetRequest{ProjectID: projectID, URL: url},
 			)
 			if err != nil {

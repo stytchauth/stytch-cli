@@ -18,7 +18,7 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve password strength configuration",
 		Long:  "Retrieve password strength configuration for a project",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().PasswordStrengthConfig.Get(
+			res, err := internal.MangoClient().PasswordStrengthConfig.Get(
 				context.Background(),
 				passwordstrengthconfig.GetRequest{ProjectID: projectID},
 			)

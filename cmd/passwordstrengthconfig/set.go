@@ -35,7 +35,7 @@ func NewSetCommand() *cobra.Command {
 					LudsMinPasswordComplexity:   ludsMinPasswordComplexity,
 				},
 			}
-			res, err := internal.GetDefaultMangoClient().PasswordStrengthConfig.Set(
+			res, err := internal.MangoClient().PasswordStrengthConfig.Set(
 				context.Background(), req,
 			)
 			if err != nil {

@@ -17,7 +17,7 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of project secrets",
 		Long:  "Retrieve a list of project secrets",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().Secrets.GetAll(context.Background(), secrets.GetAllSecretsRequest{
+			res, err := internal.MangoClient().Secrets.GetAll(context.Background(), secrets.GetAllSecretsRequest{
 				ProjectID: projectID,
 			})
 			if err != nil {

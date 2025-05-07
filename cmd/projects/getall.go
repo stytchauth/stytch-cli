@@ -14,7 +14,7 @@ func NewListCommand() *cobra.Command {
 		Use:   "list",
 		Short: "List all projects",
 		Run: func(c *cobra.Command, args []string) {
-			client := internal.GetDefaultMangoClient()
+			client := internal.MangoClient()
 			ctx := context.Background()
 
 			// Call the list endpoint

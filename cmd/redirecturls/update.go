@@ -30,7 +30,7 @@ func NewUpdateCommand() *cobra.Command {
 					},
 				},
 			}
-			res, err := internal.GetDefaultMangoClient().RedirectURLs.Update(
+			res, err := internal.MangoClient().RedirectURLs.Update(
 				context.Background(), req,
 			)
 			if err != nil {

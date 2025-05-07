@@ -19,7 +19,7 @@ func NewDeleteCommand() *cobra.Command {
 		Short: "Delete an email template",
 		Long:  "Delete an email template",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().EmailTemplates.Delete(context.Background(), emailtemplates.DeleteRequest{
+			res, err := internal.MangoClient().EmailTemplates.Delete(context.Background(), emailtemplates.DeleteRequest{
 				ProjectID:  projectID,
 				TemplateID: templateID,
 			})

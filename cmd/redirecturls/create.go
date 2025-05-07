@@ -31,7 +31,7 @@ func NewCreateCommand() *cobra.Command {
 					},
 				},
 			}
-			res, err := internal.GetDefaultMangoClient().RedirectURLs.Create(
+			res, err := internal.MangoClient().RedirectURLs.Create(
 				context.Background(), req,
 			)
 			if err != nil {

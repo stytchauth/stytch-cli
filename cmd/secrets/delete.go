@@ -17,7 +17,7 @@ func NewDeleteCommand() *cobra.Command {
 		Short: "Delete a project secret",
 		Long:  "Delete a project secret",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().Secrets.Delete(context.Background(), secrets.DeleteSecretRequest{
+			res, err := internal.MangoClient().Secrets.Delete(context.Background(), secrets.DeleteSecretRequest{
 				ProjectID: projectID,
 				SecretID:  secretID,
 			})

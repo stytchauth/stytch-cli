@@ -18,7 +18,7 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of public tokens",
 		Long:  "Retrieve a list of public tokens for a project",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().PublicTokens.GetAll(
+			res, err := internal.MangoClient().PublicTokens.GetAll(
 				context.Background(), publictokens.GetAllRequest{ProjectID: projectID},
 			)
 			if err != nil {

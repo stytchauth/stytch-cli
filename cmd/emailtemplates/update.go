@@ -20,7 +20,7 @@ func NewUpdateCommand() *cobra.Command {
 		Short: "Update an email template",
 		Long:  "Update an email template",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().EmailTemplates.Update(context.Background(), emailtemplates.UpdateRequest{
+			res, err := internal.MangoClient().EmailTemplates.Update(context.Background(), emailtemplates.UpdateRequest{
 				ProjectID: projectID,
 				EmailTemplate: emailtemplates.EmailTemplate{
 					TemplateID: templateID,

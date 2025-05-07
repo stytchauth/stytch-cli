@@ -17,7 +17,7 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve details about a secret",
 		Long:  "Retrieve details about a secret",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().Secrets.Get(context.Background(), secrets.GetSecretRequest{
+			res, err := internal.MangoClient().Secrets.Get(context.Background(), secrets.GetSecretRequest{
 				ProjectID: projectID,
 				SecretID:  secretID,
 			})

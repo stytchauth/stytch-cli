@@ -29,7 +29,7 @@ func NewSetCommand() *cobra.Command {
 					CustomAudience:  customAudience,
 				},
 			}
-			res, err := internal.GetDefaultMangoClient().JWTTemplates.Set(context.Background(), req)
+			res, err := internal.MangoClient().JWTTemplates.Set(context.Background(), req)
 			if err != nil {
 				log.Fatalf("Set JWT template: %s", err)
 			}

@@ -20,7 +20,7 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new email template",
 		Long:  "Create a new email template",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().EmailTemplates.Create(context.Background(), emailtemplates.CreateRequest{
+			res, err := internal.MangoClient().EmailTemplates.Create(context.Background(), emailtemplates.CreateRequest{
 				ProjectID: projectID,
 				EmailTemplate: emailtemplates.EmailTemplate{
 					TemplateID: templateID,

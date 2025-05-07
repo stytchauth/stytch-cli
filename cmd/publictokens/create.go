@@ -18,7 +18,7 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new public token",
 		Long:  "Create a new public token for a project",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().PublicTokens.Create(
+			res, err := internal.MangoClient().PublicTokens.Create(
 				context.Background(), publictokens.CreateRequest{ProjectID: projectID},
 			)
 			if err != nil {

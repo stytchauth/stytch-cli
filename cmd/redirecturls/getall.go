@@ -18,7 +18,7 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of redirect URLs",
 		Long:  "Retrieve a list of redirect URLs for a project",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().RedirectURLs.GetAll(
+			res, err := internal.MangoClient().RedirectURLs.GetAll(
 				context.Background(), redirecturls.GetAllRequest{ProjectID: projectID},
 			)
 			if err != nil {

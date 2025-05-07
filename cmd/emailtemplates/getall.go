@@ -18,7 +18,7 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of email templates",
 		Long:  "Retrieve a list of email templates",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().EmailTemplates.GetAll(context.Background(), emailtemplates.GetAllRequest{
+			res, err := internal.MangoClient().EmailTemplates.GetAll(context.Background(), emailtemplates.GetAllRequest{
 				ProjectID: projectID,
 			})
 			if err != nil {

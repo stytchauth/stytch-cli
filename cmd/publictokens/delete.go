@@ -19,7 +19,7 @@ func NewDeleteCommand() *cobra.Command {
 		Short: "Delete a public token",
 		Long:  "Delete a public token for a project",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().PublicTokens.Delete(
+			res, err := internal.MangoClient().PublicTokens.Delete(
 				context.Background(), publictokens.DeleteRequest{ProjectID: projectID, PublicToken: token},
 			)
 			if err != nil {

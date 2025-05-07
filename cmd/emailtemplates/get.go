@@ -19,7 +19,7 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve details about an email template",
 		Long:  "Retrieve details about an email template",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().EmailTemplates.Get(context.Background(), emailtemplates.GetRequest{
+			res, err := internal.MangoClient().EmailTemplates.Get(context.Background(), emailtemplates.GetRequest{
 				ProjectID:  projectID,
 				TemplateID: templateID,
 			})

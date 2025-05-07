@@ -23,7 +23,7 @@ func NewGetCommand() *cobra.Command {
 				ProjectID:    projectID,
 				TemplateType: jwttemplates.TemplateType(templateType),
 			}
-			res, err := internal.GetDefaultMangoClient().JWTTemplates.Get(context.Background(), req)
+			res, err := internal.MangoClient().JWTTemplates.Get(context.Background(), req)
 			if err != nil {
 				log.Fatalf("Get JWT template: %s", err)
 			}

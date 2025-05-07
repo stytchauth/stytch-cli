@@ -18,7 +18,7 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new project secret",
 		Long:  "Create a new project secret",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.GetDefaultMangoClient().Secrets.Create(context.Background(), secrets.CreateSecretRequest{
+			res, err := internal.MangoClient().Secrets.Create(context.Background(), secrets.CreateSecretRequest{
 				ProjectID: projectID,
 			})
 			if err != nil {

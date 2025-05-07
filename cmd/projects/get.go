@@ -16,7 +16,7 @@ func NewGetCommand() *cobra.Command {
 		Use:   "get",
 		Short: "Get a project by ID",
 		Run: func(c *cobra.Command, args []string) {
-			client := internal.GetDefaultMangoClient()
+			client := internal.MangoClient()
 			ctx := context.Background()
 
 			// Call the get endpoint

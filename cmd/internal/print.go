@@ -7,7 +7,7 @@ import (
 )
 
 func PrintJSON(v any) {
-	jsonBytes, err := json.Marshal(v)
+	jsonBytes, err := json.MarshalIndent(v, "", "  ")
 	if err != nil {
 		log.Fatal(err)
 	}

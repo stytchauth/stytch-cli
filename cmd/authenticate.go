@@ -54,7 +54,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			}()
 
 			// Build the authentication URL
-			u, _ := url.Parse("https://ollie.dev.stytch.com/oauth/authorize")
+			u, _ := url.Parse("https://" + internal.BaseUri + "/oauth/authorize")
 
 			params := u.Query()
 			params.Add("response_type", "code")
@@ -91,6 +91,10 @@ func handleCallback(w http.ResponseWriter, r *http.Request, pkceVerifier string)
 	fmt.Printf("✅ Received code: %s\n", code)
 
 	accessToken := getAccessTokenFromCode(code, pkceVerifier)
+	if accessToken == "" {
+		log.Fatalf("Failed to get access token")
+		return
+	}
 	// Save the access token securely
 	err := utils.SaveToken(accessToken)
 	if err != nil {
@@ -109,7 +113,7 @@ type GetAccessTokenResp struct {
 func getAccessTokenFromCode(code string, pkceVerifier string) string {
 	// make request to stytch with code to get access token
 	// store the access token/refresh token locally
-	tokenUrl := fmt.Sprintf("https://api.ollie.dev.stytch.com/v1/public/%s/oauth2/token", ProjectId)
+	tokenUrl := fmt.Sprintf("https://api." + internal.BaseUri + "/v1/public/%s/oauth2/token", ProjectId)
 	requestBody := map[string]interface{}{
 		"client_id":     ClientId,
 		"redirect_uri":  fmt.Sprintf("http://%s", PortUrl),

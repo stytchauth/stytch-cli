@@ -21,6 +21,7 @@ const (
 	CodeChallenge = "dcvJOywUwb5HOWOyhmOI5dSc4_VHQU8Xkp9bXD-tGWI"
 	CodeVerifier  = "00afa9f459ce29bd4f9cd89f3a26036c3a2a772abd929e3fe179cb41"
 	ProjectId     = "project-live-0f74ccf8-79bd-4096-bd3f-5317c0e69a3b"
+	Scope         = "openid email profile project"
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -57,6 +58,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			params.Add("redirect_uri", fmt.Sprintf("http://%s", PortUrl))
 			params.Add("code_challenge", CodeChallenge)
 			params.Add("code_verifier", CodeVerifier)
+			params.Add("scope", Scope)
 			u.RawQuery = params.Encode()
 
 			// Open browser

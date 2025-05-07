@@ -10,6 +10,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/publictokens"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/sdk"
 
 	"github.com/stytchauth/stytch-cli/cmd/internal"
 )
@@ -38,6 +39,9 @@ func NewReactB2CSetup() *cobra.Command {
 			default:
 				log.Fatalf("Invalid choice: %s", choice)
 			}
+
+			// Assert that FE SDKs are enabled and, if not, enable them.
+			checkSDKActive(c.Context(), projectID)
 
 			// Grab public token.
 			projectPublicToken := projectToken(c.Context(), projectID)
@@ -101,6 +105,30 @@ func chooseExistingProject(ctx context.Context) string {
 	}
 	log.Fatalf("Unable to find project")
 	return ""
+}
+
+func checkSDKActive(ctx context.Context, projectID string) {
+	cfgResp, err := internal.MangoClient().SDK.GetConsumerConfig(ctx, sdk.GetConsumerConfigRequest{
+		ProjectID: projectID,
+	})
+	if err != nil {
+		log.Fatalf("Unable to retrieve SDK config: %v", err)
+	}
+	if cfgResp.Config.Basic.Enabled {
+		fmt.Println("Frontend SDKs already enabled in your project, skipping.")
+		return
+	}
+	fmt.Println("Enabling usage of Frontend SDKs in your project...")
+
+	updatedCfg := cfgResp.Config
+	updatedCfg.Basic.Enabled = true
+	_, err = internal.MangoClient().SDK.SetConsumerConfig(ctx, sdk.SetConsumerConfigRequest{
+		ProjectID: projectID,
+		Config:    updatedCfg,
+	})
+	if err != nil {
+		log.Fatalf("Unable to update SDK config: %v", err)
+	}
 }
 
 func projectToken(ctx context.Context, projectID string) string {

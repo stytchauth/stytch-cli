@@ -18,10 +18,6 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new public token",
 		Long:  "Create a new public token for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-
 			res, err := internal.GetDefaultMangoClient().PublicTokens.Create(
 				context.Background(), publictokens.CreateRequest{ProjectID: projectID},
 			)
@@ -34,6 +30,6 @@ func NewCreateCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-
+	cmd.MarkFlagRequired("project-id")
 	return cmd
 }

@@ -19,10 +19,6 @@ func NewDeleteCommand() *cobra.Command {
 		Short: "Delete a public token",
 		Long:  "Delete a public token for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || token == "" {
-				log.Fatalf("Both --project-id and --public-token must be provided")
-			}
-
 			res, err := internal.GetDefaultMangoClient().PublicTokens.Delete(
 				context.Background(), publictokens.DeleteRequest{ProjectID: projectID, PublicToken: token},
 			)
@@ -36,6 +32,8 @@ func NewDeleteCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&token, "public-token", "t", "", "The public token to delete")
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("public-token")
 
 	return cmd
 }

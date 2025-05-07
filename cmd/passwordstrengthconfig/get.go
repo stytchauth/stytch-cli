@@ -18,10 +18,6 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve password strength configuration",
 		Long:  "Retrieve password strength configuration for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-
 			res, err := internal.GetDefaultMangoClient().PasswordStrengthConfig.Get(
 				context.Background(),
 				passwordstrengthconfig.GetRequest{ProjectID: projectID},
@@ -35,6 +31,6 @@ func NewGetCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-
+	cmd.MarkFlagRequired("project-id")
 	return cmd
 }

@@ -21,13 +21,6 @@ func NewSetCommand() *cobra.Command {
 		Short: "Set a JWT template",
 		Long:  "Set a JWT template",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || templateType == "" {
-				log.Fatalf("Both --project-id and --template-type must be provided")
-			}
-			if templateContent == "" {
-				log.Fatalf("Missing --template-content for JWT template")
-			}
-
 			req := &jwttemplates.SetRequest{
 				ProjectID: projectID,
 				JWTTemplate: jwttemplates.JWTTemplate{
@@ -49,6 +42,10 @@ func NewSetCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&templateType, "template-type", "t", "", "The JWT template type (e.g., SESSION or M2M)")
 	cmd.Flags().StringVarP(&templateContent, "template-content", "c", "", "The JWT template content")
 	cmd.Flags().StringVarP(&customAudience, "custom-audience", "a", "", "The custom audience for the JWT template (optional)")
+
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("template-type")
+	cmd.MarkFlagRequired("template-content")
 
 	return cmd
 }

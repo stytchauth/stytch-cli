@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/stytchauth/stytch-cli/utils"
 
@@ -25,12 +25,24 @@ func NewAuthenticateCommand() *cobra.Command {
 		Use:   "authenticate",
 		Short: "Start authentication flow via Stytch",
 		Run: func(cmd *cobra.Command, args []string) {
-			http.HandleFunc("/", handleCallback)
+			stop := make(chan struct{})
+			
+			mux := http.NewServeMux()
+			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				handleCallback(w, r)
+				close(stop)
+			})
+
+			server := &http.Server{
+				Addr:    PortUrl,
+				Handler: mux,
+			}
 
 			go func() {
 				fmt.Printf("Listening on http://%s/\n", PortUrl)
-				if err := http.ListenAndServe(PortUrl, nil); err != nil {
-					log.Fatalf("Failed to start server: %v", err)
+				if err := server.ListenAndServe(); err != http.ErrServerClosed {
+					fmt.Printf("Server error: %v\n", err)
+					panic(err)
 				}
 			}()
 
@@ -41,7 +53,13 @@ func NewAuthenticateCommand() *cobra.Command {
 			utils.OpenBrowser(authURL)
 
 			// Keep the program running
-			select {}
+			<-stop
+
+			// shut down the server
+			if err := server.Shutdown(context.Background()); err != nil {
+				log.Fatalf("Server shutdown failed: %v", err)
+			}
+			fmt.Println("Server shutdown successfully")
 		},
 	}
 
@@ -58,22 +76,15 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("✅ Received code: %s\n", code)
 
 	accessToken := getAccessTokenFromCode(code)
-	fmt.Printf("access token: %s\n", accessToken)
-
 	// Save the access token securely
 	err := utils.SaveToken(accessToken)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println("✅ Access token saved")
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)
-
-	// Optionally: shut down CLI here
-	go func() {
-		log.Println("Shutting down CLI after receiving code")
-		os.Exit(0) // Uncomment if you want it to exit
-	}()
 }
 
 type GetAccessTokenResp struct {
@@ -96,7 +107,6 @@ func getAccessTokenFromCode(code string) string {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Request body: %s\n", string(bodyBytes))
 
 	// Make the HTTP request
 	req, err := http.NewRequest("POST", tokenUrl, bytes.NewBuffer(bodyBytes))
@@ -124,6 +134,5 @@ func getAccessTokenFromCode(code string) string {
 		panic(err)
 	}
 
-	fmt.Printf("Status: %s\n", resp.Status)
 	return getAccessTokenResp.AccessToken
 }

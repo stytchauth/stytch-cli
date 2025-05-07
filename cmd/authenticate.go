@@ -17,7 +17,7 @@ import (
 
 const (
 	Scopes  = "openid email profile project admin:projects offline_access"
-	BaseURI = "staging.stytch.com"
+	BaseURI = "stytch.com"
 )
 
 func NewAuthenticateCommand() *cobra.Command {

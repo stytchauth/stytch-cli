@@ -3,7 +3,6 @@ module github.com/stytchauth/stytch-cli
 go 1.24.1
 
 require (
-	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.9.1
 	github.com/stytchauth/stytch-management-go/v2 v2.1.2
 	github.com/zalando/go-keyring v0.2.6

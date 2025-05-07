@@ -4,11 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
-	"github.com/stytchauth/stytch-management-go/v2/pkg/api"
+	"github.com/stytchauth/stytch-cli/cmd/internal"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 )
 
@@ -20,20 +18,7 @@ func NewCreateCommand() *cobra.Command {
 		Use:   "create",
 		Short: "Create a new project",
 		Run: func(c *cobra.Command, args []string) {
-			// Load environment variables from .env file
-			err := godotenv.Load()
-			if err != nil {
-				log.Fatal("Error loading .env file")
-			}
-			// Set your Stytch Management API credentials as env variables
-			keyID := os.Getenv("STYTCH_WORKSPACE_KEY_ID")
-			keySecret := os.Getenv("STYTCH_WORKSPACE_KEY_SECRET")
-
-			if keyID == "" || keySecret == "" {
-				log.Fatal("STYTCH_WORKSPACE_KEY_ID and STYTCH_WORKSPACE_KEY_SECRET must be set")
-			}
-
-			client := api.NewClient(keyID, keySecret)
+			client := internal.GetDefaultMangoClient()
 			ctx := context.Background()
 
 			// Send the request
@@ -61,5 +46,7 @@ func NewCreateCommand() *cobra.Command {
 	}
 	createCommand.Flags().StringVarP(&vertical, "vertical", "v", "", "The vertical of the project")
 	createCommand.Flags().StringVarP(&projectName, "name", "n", "", "The name of the project")
+	createCommand.MarkFlagRequired("vertical")
+	createCommand.MarkFlagRequired("name")
 	return createCommand
 }

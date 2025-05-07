@@ -31,8 +31,14 @@ func NewDeleteCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&secretID, "secret-id", "s", "", "The secret ID")
-	cmd.MarkFlagRequired("project-id")
-	cmd.MarkFlagRequired("secret-id")
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("secret-id"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 
 	return cmd
 }

@@ -20,13 +20,6 @@ func NewUpdateCommand() *cobra.Command {
 		Short: "Update an email template",
 		Long:  "Update an email template",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || templateID == "" {
-				log.Fatalf("Both --project-id and --template-id must be provided")
-			}
-			if name == "" {
-				log.Fatalf("Missing --name for update")
-			}
-
 			res, err := internal.GetDefaultMangoClient().EmailTemplates.Update(context.Background(), emailtemplates.UpdateRequest{
 				ProjectID: projectID,
 				EmailTemplate: emailtemplates.EmailTemplate{
@@ -45,6 +38,14 @@ func NewUpdateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&templateID, "template-id", "t", "", "The email template ID")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "The new name of the email template")
-
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("template-id"))
+	errors = append(errors, cmd.MarkFlagRequired("name"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 	return cmd
 }

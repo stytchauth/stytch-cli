@@ -44,9 +44,14 @@ func NewUpdateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL to update")
 	cmd.Flags().StringVarP(&redirectType, "redirect-type", "t", "", "The new redirect type (e.g., LOGIN, SIGNUP)")
-	cmd.MarkFlagRequired("project-id")
-	cmd.MarkFlagRequired("url")
-	cmd.MarkFlagRequired("redirect-type")
-
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("url"))
+	errors = append(errors, cmd.MarkFlagRequired("redirect-type"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 	return cmd
 }

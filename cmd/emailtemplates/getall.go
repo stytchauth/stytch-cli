@@ -18,10 +18,6 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of email templates",
 		Long:  "Retrieve a list of email templates",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-
 			res, err := internal.GetDefaultMangoClient().EmailTemplates.GetAll(context.Background(), emailtemplates.GetAllRequest{
 				ProjectID: projectID,
 			})
@@ -34,6 +30,9 @@ func NewGetAllCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-
+	err := cmd.MarkFlagRequired("project-id")
+	if err != nil {
+		log.Fatalf("Error marking project-id flag required: %v", err)
+	}
 	return cmd
 }

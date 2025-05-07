@@ -32,8 +32,14 @@ func NewDeleteCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&token, "public-token", "t", "", "The public token to delete")
-	cmd.MarkFlagRequired("project-id")
-	cmd.MarkFlagRequired("public-token")
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("public-token"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 
 	return cmd
 }

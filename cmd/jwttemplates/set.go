@@ -43,9 +43,15 @@ func NewSetCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&templateContent, "template-content", "c", "", "The JWT template content")
 	cmd.Flags().StringVarP(&customAudience, "custom-audience", "a", "", "The custom audience for the JWT template (optional)")
 
-	cmd.MarkFlagRequired("project-id")
-	cmd.MarkFlagRequired("template-type")
-	cmd.MarkFlagRequired("template-content")
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("template-type"))
+	errors = append(errors, cmd.MarkFlagRequired("template-content"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 
 	return cmd
 }

@@ -2,7 +2,6 @@ package project
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"strings"
 
@@ -41,16 +40,18 @@ func NewCreateCommand() *cobra.Command {
 			if err != nil {
 				log.Fatalf("Error creating B2B project: %v", err)
 			}
-
-			// Get the new project information
-			// This is used in examples below
-			newProject := res.Project
-			fmt.Printf("New project created: %+v\n", newProject.Name)
+			internal.PrintJSON(res)
 		},
 	}
 	createCommand.Flags().StringVarP(&vertical, "vertical", "v", "", "The vertical of the project")
 	createCommand.Flags().StringVarP(&projectName, "name", "n", "", "The name of the project")
-	createCommand.MarkFlagRequired("vertical")
-	createCommand.MarkFlagRequired("name")
+	var errors []error
+	errors = append(errors, createCommand.MarkFlagRequired("vertical"))
+	errors = append(errors, createCommand.MarkFlagRequired("name"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 	return createCommand
 }

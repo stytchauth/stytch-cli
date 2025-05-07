@@ -8,12 +8,6 @@ import (
 	"github.com/stytchauth/stytch-cli/utils"
 )
 
-var client *api.API
-
-func SetDefaultMangoClient(c *api.API) {
-	client = c
-}
-
 func GetDefaultMangoClient() *api.API {
 	token, err := utils.LoadToken()
 	if err != nil {

@@ -19,10 +19,6 @@ func NewDeleteCommand() *cobra.Command {
 		Short: "Delete an email template",
 		Long:  "Delete an email template",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || templateID == "" {
-				log.Fatalf("Both --project-id and --template-id must be provided")
-			}
-
 			res, err := internal.GetDefaultMangoClient().EmailTemplates.Delete(context.Background(), emailtemplates.DeleteRequest{
 				ProjectID:  projectID,
 				TemplateID: templateID,
@@ -37,6 +33,13 @@ func NewDeleteCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&templateID, "template-id", "t", "", "The email template ID")
-
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("template-id"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 	return cmd
 }

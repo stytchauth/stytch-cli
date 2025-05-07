@@ -34,8 +34,14 @@ func NewGetCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&templateType, "template-type", "t", "", "The JWT template type (e.g., SESSION or M2M)")
-	cmd.MarkFlagRequired("project-id")
-	cmd.MarkFlagRequired("template-type")
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("template-type"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 
 	return cmd
 }

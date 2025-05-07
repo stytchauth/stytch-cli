@@ -20,16 +20,6 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new email template",
 		Long:  "Create a new email template",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-			if templateID == "" {
-				log.Fatalf("Missing --template-id")
-			}
-			if name == "" {
-				log.Fatalf("Missing --name")
-			}
-
 			res, err := internal.GetDefaultMangoClient().EmailTemplates.Create(context.Background(), emailtemplates.CreateRequest{
 				ProjectID: projectID,
 				EmailTemplate: emailtemplates.EmailTemplate{
@@ -48,6 +38,14 @@ func NewCreateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&templateID, "template-id", "t", "", "The email template ID")
 	cmd.Flags().StringVarP(&name, "name", "n", "", "The name of the email template")
-
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("template-id"))
+	errors = append(errors, cmd.MarkFlagRequired("name"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 	return cmd
 }

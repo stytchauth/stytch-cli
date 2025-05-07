@@ -3,6 +3,7 @@ module github.com/stytchauth/stytch-cli
 go 1.24.1
 
 require (
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/manifoldco/promptui v0.9.0
 	github.com/spf13/cobra v1.9.1
 	github.com/stytchauth/stytch-management-go/v2 v2.1.2

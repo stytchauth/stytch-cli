@@ -7,17 +7,24 @@ const (
 	user    = "stytch-user"
 )
 
+type TokenType string
+
+const (
+	AccessToken  TokenType = "access_token"
+	RefreshToken TokenType = "refresh_token"
+)
+
 // SaveToken persists the token securely
-func SaveToken(tok string) error {
-	return keyring.Set(service, user, tok)
+func SaveToken(tok string, typ TokenType) error {
+	return keyring.Set(service, user+string(typ), tok)
 }
 
 // LoadToken retrieves the token
-func LoadToken() (string, error) {
-	return keyring.Get(service, user)
+func LoadToken(typ TokenType) (string, error) {
+	return keyring.Get(service, user+string(typ))
 }
 
 // DeleteToken logs out
-func DeleteToken() error {
-	return keyring.Delete(service, user)
+func DeleteToken(typ TokenType) error {
+	return keyring.Delete(service, user+string(typ))
 }

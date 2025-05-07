@@ -5,11 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"net/url"
+	"slices"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/publictokens"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/redirecturls"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/sdk"
 
 	"github.com/stytchauth/stytch-cli/cmd/internal"
@@ -42,6 +45,9 @@ func NewReactB2CSetup() *cobra.Command {
 
 			// Assert that FE SDKs are enabled and, if not, enable them.
 			checkSDKActive(c.Context(), projectID)
+
+			// Assert that the project has valid redirect URLs.
+			checkRedirectURLs(c.Context(), projectID)
 
 			// Grab public token.
 			projectPublicToken := projectToken(c.Context(), projectID)
@@ -133,6 +139,65 @@ func checkSDKActive(ctx context.Context, projectID string) {
 	if err != nil {
 		log.Fatalf("Unable to update SDK config: %v", err)
 	}
+}
+
+func checkRedirectURLs(ctx context.Context, projectID string) {
+	resp, err := internal.MangoClient().RedirectURLs.GetAll(ctx, redirecturls.GetAllRequest{
+		ProjectID: projectID,
+	})
+	if err != nil {
+		log.Fatalf("Unable to retrieve redirect URLs: %v", err)
+	}
+
+	// A valid redirect URL has to be enabled for login AND signup.
+	var validRedirectURLs []string
+	for _, u := range resp.RedirectURLs {
+		var tpes []redirecturls.RedirectType
+		for _, tpe := range u.ValidTypes {
+			tpes = append(tpes, tpe.Type)
+		}
+		if slices.Contains(tpes, redirecturls.RedirectTypeLogin) && slices.Contains(tpes, redirecturls.RedirectTypeSignup) {
+			validRedirectURLs = append(validRedirectURLs, u.URL)
+		}
+	}
+	if len(validRedirectURLs) > 0 {
+		fmt.Println("Valid Redirect URLs already configured for this project.")
+		return
+	}
+
+	fmt.Println("No Redirect URLs configured for this project. Please add one to continue.")
+	redirectPrompt := promptui.Prompt{
+		Label: "Enter a redirect URL:",
+		Validate: func(input string) error {
+			_, err := url.Parse(input)
+			return err
+		},
+	}
+	urlInput, err := redirectPrompt.Run()
+	if err != nil {
+		log.Fatalf("Unable to parse redirect URL: %v", err)
+	}
+
+	_, err = internal.MangoClient().RedirectURLs.Create(ctx, redirecturls.CreateRequest{
+		ProjectID: projectID,
+		RedirectURL: redirecturls.RedirectURL{
+			URL: urlInput,
+			ValidTypes: []redirecturls.URLRedirectType{
+				{
+					Type:      redirecturls.RedirectTypeLogin,
+					IsDefault: false,
+				},
+				{
+					Type:      redirecturls.RedirectTypeSignup,
+					IsDefault: false,
+				},
+			},
+		},
+	})
+	if err != nil {
+		log.Fatalf("Unable to create redirect URL: %v", err)
+	}
+	fmt.Println("Redirect URL created successfully.")
 }
 
 func projectToken(ctx context.Context, projectID string) string {

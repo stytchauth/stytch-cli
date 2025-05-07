@@ -19,10 +19,6 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve details about a redirect URL",
 		Long:  "Retrieve details about a redirect URL for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || url == "" {
-				log.Fatalf("Both --project-id and --url must be provided")
-			}
-
 			res, err := internal.GetDefaultMangoClient().RedirectURLs.Get(
 				context.Background(), redirecturls.GetRequest{ProjectID: projectID, URL: url},
 			)
@@ -36,6 +32,7 @@ func NewGetCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL")
-
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("url")
 	return cmd
 }

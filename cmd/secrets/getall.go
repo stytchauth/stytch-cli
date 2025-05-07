@@ -17,10 +17,6 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of project secrets",
 		Long:  "Retrieve a list of project secrets",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-
 			res, err := internal.GetDefaultMangoClient().Secrets.GetAll(context.Background(), secrets.GetAllSecretsRequest{
 				ProjectID: projectID,
 			})
@@ -33,6 +29,6 @@ func NewGetAllCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-
+	cmd.MarkFlagRequired("project-id")
 	return cmd
 }

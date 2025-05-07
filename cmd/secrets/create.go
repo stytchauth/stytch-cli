@@ -18,10 +18,6 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new project secret",
 		Long:  "Create a new project secret",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-
 			res, err := internal.GetDefaultMangoClient().Secrets.Create(context.Background(), secrets.CreateSecretRequest{
 				ProjectID: projectID,
 			})
@@ -34,6 +30,6 @@ func NewCreateCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
-
+	cmd.MarkFlagRequired("project-id")
 	return cmd
 }

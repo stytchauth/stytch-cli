@@ -21,16 +21,6 @@ func NewCreateCommand() *cobra.Command {
 		Short: "Create a new redirect URL",
 		Long:  "Create a new redirect URL for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-			if url == "" {
-				log.Fatalf("Missing --url")
-			}
-			if redirectType == "" {
-				log.Fatalf("Missing --redirect-type")
-			}
-
 			// Build the request
 			req := redirecturls.CreateRequest{
 				ProjectID: projectID,
@@ -56,6 +46,9 @@ func NewCreateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL to create")
 	cmd.Flags().StringVarP(&redirectType, "redirect-type", "t", "", "The redirect type (e.g., LOGIN, SIGNUP)")
 	cmd.Flags().BoolVarP(&isDefault, "is-default", "d", false, "Whether to set this URL as the default for the given redirect type")
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("url")
+	cmd.MarkFlagRequired("redirect-type")
 
 	return cmd
 }

@@ -17,10 +17,6 @@ func NewDeleteCommand() *cobra.Command {
 		Short: "Delete a project secret",
 		Long:  "Delete a project secret",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || secretID == "" {
-				log.Fatalf("Both --project-id and --secret-id must be provided")
-			}
-
 			res, err := internal.GetDefaultMangoClient().Secrets.Delete(context.Background(), secrets.DeleteSecretRequest{
 				ProjectID: projectID,
 				SecretID:  secretID,
@@ -35,6 +31,8 @@ func NewDeleteCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&secretID, "secret-id", "s", "", "The secret ID")
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("secret-id")
 
 	return cmd
 }

@@ -18,10 +18,6 @@ func NewGetAllCommand() *cobra.Command {
 		Short: "Retrieve a list of public tokens",
 		Long:  "Retrieve a list of public tokens for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-
 			res, err := internal.GetDefaultMangoClient().PublicTokens.GetAll(
 				context.Background(), publictokens.GetAllRequest{ProjectID: projectID},
 			)
@@ -34,6 +30,7 @@ func NewGetAllCommand() *cobra.Command {
 	}
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
+	cmd.MarkFlagRequired("project-id")
 
 	return cmd
 }

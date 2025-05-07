@@ -19,10 +19,6 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve details about a JWT template",
 		Long:  "Retrieve details about a JWT template",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || templateType == "" {
-				log.Fatalf("Both --project-id and --template-type must be provided")
-			}
-
 			req := &jwttemplates.GetRequest{
 				ProjectID:    projectID,
 				TemplateType: jwttemplates.TemplateType(templateType),
@@ -38,6 +34,8 @@ func NewGetCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&templateType, "template-type", "t", "", "The JWT template type (e.g., SESSION or M2M)")
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("template-type")
 
 	return cmd
 }

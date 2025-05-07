@@ -24,13 +24,6 @@ func NewSetCommand() *cobra.Command {
 		Short: "Update password strength configuration",
 		Long:  "Update password strength configuration for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" {
-				log.Fatalf("Missing --project-id")
-			}
-			if validationPolicy == "" {
-				log.Fatalf("Missing --validation-policy")
-			}
-
 			req := passwordstrengthconfig.SetRequest{
 				ProjectID: projectID,
 				PasswordStrengthConfig: passwordstrengthconfig.PasswordStrengthConfig{
@@ -60,6 +53,9 @@ func NewSetCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&validationPolicy, "validation-policy", "y", "", "The validation policy (LUDS or ZXCVBN)")
 	cmd.Flags().IntVarP(&ludsMinPasswordLength, "luds-min-password-length", "m", 0, "Minimum password length for LUDS policy")
 	cmd.Flags().IntVarP(&ludsMinPasswordComplexity, "luds-min-password-complexity", "x", 0, "Minimum password complexity for LUDS policy")
+
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("validation-policy")
 
 	return cmd
 }

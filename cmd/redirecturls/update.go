@@ -20,13 +20,6 @@ func NewUpdateCommand() *cobra.Command {
 		Short: "Update a redirect URL",
 		Long:  "Update a redirect URL for a project",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || url == "" {
-				log.Fatalf("Both --project-id and --url must be provided")
-			}
-			if redirectType == "" {
-				log.Fatalf("Missing --redirect-type for update")
-			}
-
 			// Build the request
 			req := redirecturls.UpdateRequest{
 				ProjectID: projectID,
@@ -51,6 +44,9 @@ func NewUpdateCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL to update")
 	cmd.Flags().StringVarP(&redirectType, "redirect-type", "t", "", "The new redirect type (e.g., LOGIN, SIGNUP)")
+	cmd.MarkFlagRequired("project-id")
+	cmd.MarkFlagRequired("url")
+	cmd.MarkFlagRequired("redirect-type")
 
 	return cmd
 }

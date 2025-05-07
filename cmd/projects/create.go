@@ -1,11 +1,6 @@
 package project
 
 import (
-<<<<<<< HEAD
-	"context"
-=======
-	"fmt"
->>>>>>> main
 	"log"
 	"strings"
 

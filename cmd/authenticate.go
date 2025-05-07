@@ -41,7 +41,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			go func() {
 				fmt.Printf("Listening on http://%s/\n", PortUrl)
 				if err := server.ListenAndServe(); err != http.ErrServerClosed {
-					fmt.Println("Server error: %v", err)
+					fmt.Printf("Server error: %v\n", err)
 					panic(err)
 				}
 			}()
@@ -59,6 +59,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			if err := server.Shutdown(context.Background()); err != nil {
 				log.Fatalf("Server shutdown failed: %v", err)
 			}
+			fmt.Println("Server shutdown successfully")
 		},
 	}
 
@@ -133,6 +134,5 @@ func getAccessTokenFromCode(code string) string {
 		panic(err)
 	}
 
-	fmt.Printf("Status: %s\n", resp.Status)
 	return getAccessTokenResp.AccessToken
 }

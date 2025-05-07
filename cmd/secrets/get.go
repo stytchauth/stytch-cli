@@ -17,10 +17,6 @@ func NewGetCommand() *cobra.Command {
 		Short: "Retrieve details about a secret",
 		Long:  "Retrieve details about a secret",
 		Run: func(c *cobra.Command, args []string) {
-			if projectID == "" || secretID == "" {
-				log.Fatalf("Both --project-id and --secret-id must be provided")
-			}
-
 			res, err := internal.MangoClient().Secrets.Get(context.Background(), secrets.GetSecretRequest{
 				ProjectID: projectID,
 				SecretID:  secretID,
@@ -33,8 +29,15 @@ func NewGetCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&projectID, "project-id", "", "The project ID")
-	cmd.Flags().StringVar(&secretID, "secret-id", "", "The secret ID")
-
+	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
+	cmd.Flags().StringVarP(&secretID, "secret-id", "s", "", "The secret ID")
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("secret-id"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
 	return cmd
 }

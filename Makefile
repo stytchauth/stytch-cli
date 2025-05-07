@@ -14,10 +14,6 @@ install: build
 lint:
 	golangci-lint run
 
-.PHONY: generate
-generate:
-	cd tools; go generate ./...
-
 .PHONY: fmt
 fmt:
 	gofmt -s -w -e .

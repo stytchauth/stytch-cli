@@ -1,0 +1,5 @@
+1. Import other root commands in root.go (only have projects currently)
+2. Alias `get-all` to `list`
+3. Change `Run` to `RunE` in all commands
+4. Use `cmd.MarkFlagRequired` instead of checking for empty strings
+5. Provide a `--no-browser` option for headless servers in authenticate flow

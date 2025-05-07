@@ -1,4 +1,4 @@
-package secrets
+package emailtemplates
 
 import (
 	"context"
@@ -6,22 +6,23 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/stytchauth/stytch-cli/cmd/internal"
-	"github.com/stytchauth/stytch-management-go/v2/pkg/models/secrets"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/emailtemplates"
 )
 
+// NewGetAllCommand returns a cobra command for listing email templates
 func NewGetAllCommand() *cobra.Command {
 	var projectID string
 
 	cmd := &cobra.Command{
 		Use:   "get-all",
-		Short: "Retrieve a list of project secrets",
-		Long:  "Retrieve a list of project secrets",
+		Short: "Retrieve a list of email templates",
+		Long:  "Retrieve a list of email templates",
 		Run: func(c *cobra.Command, args []string) {
-			res, err := internal.MangoClient().Secrets.GetAll(context.Background(), secrets.GetAllSecretsRequest{
+			res, err := internal.MangoClient().EmailTemplates.GetAll(context.Background(), emailtemplates.GetAllRequest{
 				ProjectID: projectID,
 			})
 			if err != nil {
-				log.Fatalf("Get all secrets: %s", err)
+				log.Fatalf("Get all email templates: %s", err)
 			}
 
 			internal.PrintJSON(res)

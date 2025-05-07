@@ -1,0 +1,44 @@
+package redirecturls
+
+import (
+	"context"
+	"log"
+
+	"github.com/spf13/cobra"
+	"github.com/stytchauth/stytch-cli/cmd/internal"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/redirecturls"
+)
+
+// NewDeleteCommand returns a cobra command for deleting a redirect URL
+func NewDeleteCommand() *cobra.Command {
+	var projectID string
+	var url string
+
+	cmd := &cobra.Command{
+		Use:   "delete",
+		Short: "Delete a redirect URL",
+		Long:  "Delete a redirect URL for a project",
+		Run: func(c *cobra.Command, args []string) {
+			res, err := internal.MangoClient().RedirectURLs.Delete(
+				context.Background(), redirecturls.DeleteRequest{ProjectID: projectID, URL: url},
+			)
+			if err != nil {
+				log.Fatalf("Delete redirect URL: %s", err)
+			}
+
+			internal.PrintJSON(res)
+		},
+	}
+
+	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
+	cmd.Flags().StringVarP(&url, "url", "u", "", "The redirect URL to delete")
+	var errors []error
+	errors = append(errors, cmd.MarkFlagRequired("project-id"))
+	errors = append(errors, cmd.MarkFlagRequired("url"))
+	if len(errors) > 0 {
+		for _, err := range errors {
+			log.Fatalf("Error marking flag required: %v", err)
+		}
+	}
+	return cmd
+}

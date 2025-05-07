@@ -9,7 +9,7 @@ import (
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 )
 
-func NewListCommand() *cobra.Command {
+func NewGetAllCommand() *cobra.Command {
 	getAllCommand := &cobra.Command{
 		Use:   "list",
 		Short: "List all projects",

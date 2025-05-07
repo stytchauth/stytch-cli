@@ -22,7 +22,7 @@ type GetAccessTokenResp struct {
 func GetAccessTokenFromRefreshToken(tok string) string {
 	// make request to stytch with refresh token to get access token
 	// store the access token/refresh token locally
-	tokenUrl := fmt.Sprintf("https://api.ollie.dev.stytch.com/v1/public/%s/oauth2/token", ProjectId)
+	tokenUrl := fmt.Sprintf("https://api.stytch.com/v1/public/%s/oauth2/token", ProjectId)
 	requestBody := map[string]interface{}{
 		"client_id":     ClientId,
 		"grant_type":    "refresh_token",
@@ -60,7 +60,7 @@ func GetAccessTokenFromRefreshToken(tok string) string {
 func GetAccessTokenFromCode(code string, pkceVerifier string) GetAccessTokenResp {
 	// make request to stytch with code to get access token
 	// store the access token/refresh token locally
-	tokenUrl := fmt.Sprintf("https://api.ollie.dev.stytch.com/v1/public/%s/oauth2/token", ProjectId)
+	tokenUrl := fmt.Sprintf("https://api.stytch.com/v1/public/%s/oauth2/token", ProjectId)
 	requestBody := map[string]interface{}{
 		"client_id":     ClientId,
 		"redirect_uri":  fmt.Sprintf("http://%s", PortUrl),

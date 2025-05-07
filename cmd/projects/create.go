@@ -4,14 +4,17 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strings"
 
 	"github.com/spf13/cobra"
 	"github.com/stytchauth/stytch-cli/cmd/internal"
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 )
 
-var vertical string    // for the --vertical flag
-var projectName string // for the --name flag
+var (
+	vertical    string // for the --vertical flag
+	projectName string // for the --name flag
+)
 
 func NewCreateCommand() *cobra.Command {
 	createCommand := &cobra.Command{
@@ -23,11 +26,12 @@ func NewCreateCommand() *cobra.Command {
 
 			// Send the request
 			var verticalType projects.Vertical
-			if vertical == "b2b" {
+			switch strings.ToLower(vertical) {
+			case "b2b":
 				verticalType = projects.VerticalB2B
-			} else if vertical == "consumer" {
+			case "consumer":
 				verticalType = projects.VerticalConsumer
-			} else {
+			default:
 				log.Fatalf("Invalid vertical: %s", vertical)
 			}
 			res, err := client.Projects.Create(ctx, projects.CreateRequest{

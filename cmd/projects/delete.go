@@ -10,9 +10,9 @@ import (
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 )
 
-var projectID string // for the --id flag
-
 func NewDeleteCommand() *cobra.Command {
+	var projectID string
+
 	deleteCommand := &cobra.Command{
 		Use:   "delete",
 		Short: "Delete a project by ID",

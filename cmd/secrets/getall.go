@@ -32,7 +32,7 @@ func NewGetAllCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVar(&projectID, "project-id", "", "The project ID")
+   cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 
 	return cmd
 }

@@ -32,7 +32,7 @@ func NewAuthenticateCommand() *cobra.Command {
 				handleCallback(w, r)
 				close(stop)
 			})
-			
+
 			server := &http.Server{
 				Addr:    PortUrl,
 				Handler: mux,
@@ -41,7 +41,8 @@ func NewAuthenticateCommand() *cobra.Command {
 			go func() {
 				fmt.Printf("Listening on http://%s/\n", PortUrl)
 				if err := server.ListenAndServe(); err != http.ErrServerClosed {
-					log.Fatalf("Server error: %v", err)
+					fmt.Println("Server error: %v", err)
+					panic(err)
 				}
 			}()
 
@@ -79,7 +80,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println("Access token saved")
+	fmt.Println("✅ Access token saved")
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)
@@ -105,7 +106,6 @@ func getAccessTokenFromCode(code string) string {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Request body: %s\n", string(bodyBytes))
 
 	// Make the HTTP request
 	req, err := http.NewRequest("POST", tokenUrl, bytes.NewBuffer(bodyBytes))

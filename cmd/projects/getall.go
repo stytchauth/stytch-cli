@@ -9,10 +9,10 @@ import (
 	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 )
 
-func NewListCommand() *cobra.Command {
+func NewGetAllCommand() *cobra.Command {
 	getAllCommand := &cobra.Command{
-		Use:   "list",
-		Short: "List all projects",
+		Use:   "getall",
+		Short: "Get all all projects",
 		Run: func(c *cobra.Command, args []string) {
 			client := internal.MangoClient()
 			ctx := context.Background()

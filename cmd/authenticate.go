@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/stytchauth/stytch-cli/utils"
 
@@ -26,8 +27,8 @@ func NewAuthenticateCommand() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			stop := make(chan struct{})
 			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-				defer close(stop)
 				handleCallback(w, r)
+				close(stop)
 			})
 
 			go func() {
@@ -45,6 +46,8 @@ func NewAuthenticateCommand() *cobra.Command {
 
 			// Keep the program running
 			<-stop
+			// Wait for 1 second to ensure the redirect is called
+			time.Sleep(1 * time.Second)
 		},
 	}
 
@@ -66,7 +69,7 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
-	fmt.Printf("Access token saved")
+	fmt.Println("Access token saved")
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)

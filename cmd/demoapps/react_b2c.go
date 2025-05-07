@@ -114,14 +114,18 @@ func checkSDKActive(ctx context.Context, projectID string) {
 	if err != nil {
 		log.Fatalf("Unable to retrieve SDK config: %v", err)
 	}
+	updatedCfg := cfgResp.Config
 	if cfgResp.Config.Basic.Enabled {
 		fmt.Println("Frontend SDKs already enabled in your project, skipping.")
-		return
+	} else {
+		fmt.Println("Enabling usage of Frontend SDKs in your project...")
+		updatedCfg.Basic.Enabled = true
 	}
-	fmt.Println("Enabling usage of Frontend SDKs in your project...")
 
-	updatedCfg := cfgResp.Config
-	updatedCfg.Basic.Enabled = true
+	if len(cfgResp.Config.Basic.Domains) == 0 {
+		fmt.Println("Frontend SDKs does not have domains set, setting to localhost:3000")
+		cfgResp.Config.Basic.Domains = []string{"http://localhost:3000"}
+	}
 	_, err = internal.MangoClient().SDK.SetConsumerConfig(ctx, sdk.SetConsumerConfigRequest{
 		ProjectID: projectID,
 		Config:    updatedCfg,

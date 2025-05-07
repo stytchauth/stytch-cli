@@ -27,7 +27,6 @@ func NewAuthenticateCommand() *cobra.Command {
 			stop := make(chan struct{})
 			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 				defer close(stop)
-				fmt.Println("Callback handler called!")
 				handleCallback(w, r)
 			})
 
@@ -62,12 +61,12 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("✅ Received code: %s\n", code)
 
 	accessToken := getAccessTokenFromCode(code)
-	fmt.Printf("access token: %s\n", accessToken)
 	// Save the access token securely
 	err := utils.SaveToken(accessToken)
 	if err != nil {
 		panic(err)
 	}
+	fmt.Printf("Access token saved")
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)

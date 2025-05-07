@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
 	"log"
 	"net/http"
-	"time"
 
 	"github.com/stytchauth/stytch-cli/utils"
 
@@ -26,15 +26,22 @@ func NewAuthenticateCommand() *cobra.Command {
 		Short: "Start authentication flow via Stytch",
 		Run: func(cmd *cobra.Command, args []string) {
 			stop := make(chan struct{})
-			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+			
+			mux := http.NewServeMux()
+			mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 				handleCallback(w, r)
 				close(stop)
 			})
+			
+			server := &http.Server{
+				Addr:    PortUrl,
+				Handler: mux,
+			}
 
 			go func() {
 				fmt.Printf("Listening on http://%s/\n", PortUrl)
-				if err := http.ListenAndServe(PortUrl, nil); err != nil {
-					log.Fatalf("Failed to start server: %v", err)
+				if err := server.ListenAndServe(); err != http.ErrServerClosed {
+					log.Fatalf("Server error: %v", err)
 				}
 			}()
 
@@ -46,8 +53,11 @@ func NewAuthenticateCommand() *cobra.Command {
 
 			// Keep the program running
 			<-stop
-			// Wait for 1 second to ensure the redirect is called
-			time.Sleep(1 * time.Second)
+
+			// shut down the server
+			if err := server.Shutdown(context.Background()); err != nil {
+				log.Fatalf("Server shutdown failed: %v", err)
+			}
 		},
 	}
 

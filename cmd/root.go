@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"os"
 
-	project "github.com/stytchauth/stytch-cli/cmd/projects"
-
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+
+	project "github.com/stytchauth/stytch-cli/cmd/projects"
 )
 
 func NewRootCommand() *cobra.Command {

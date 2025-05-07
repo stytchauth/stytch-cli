@@ -8,11 +8,11 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
-	"github.com/stytchauth/stytch-management-go/pkg/api"
-	"github.com/stytchauth/stytch-management-go/pkg/models/projects"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/api"
+	"github.com/stytchauth/stytch-management-go/v2/pkg/models/projects"
 )
 
-var vertical string // for the --vertical flag
+var vertical string    // for the --vertical flag
 var projectName string // for the --name flag
 
 func NewCreateCommand() *cobra.Command {
@@ -47,7 +47,7 @@ func NewCreateCommand() *cobra.Command {
 			}
 			res, err := client.Projects.Create(ctx, projects.CreateRequest{
 				ProjectName: projectName,
-				Vertical:  verticalType  ,
+				Vertical:    verticalType,
 			})
 			if err != nil {
 				log.Fatalf("Error creating B2B project: %v", err)

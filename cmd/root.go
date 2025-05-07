@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/stytchauth/stytch-cli/cmd/demoapps"
 	"github.com/stytchauth/stytch-cli/cmd/emailtemplates"
 	"github.com/stytchauth/stytch-cli/cmd/jwttemplates"
 	"github.com/stytchauth/stytch-cli/cmd/passwordstrengthconfig"
@@ -28,6 +29,7 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(emailtemplates.NewRootCommand())
 	command.AddCommand(publictokens.NewRootCommand())
 	command.AddCommand(secrets.NewRootCommand())
+	command.AddCommand(demoapps.NewReactB2CSetup())
 
 	return command
 }

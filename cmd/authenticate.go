@@ -7,7 +7,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 
 	"github.com/stytchauth/stytch-cli/utils"
 
@@ -25,7 +24,12 @@ func NewAuthenticateCommand() *cobra.Command {
 		Use:   "authenticate",
 		Short: "Start authentication flow via Stytch",
 		Run: func(cmd *cobra.Command, args []string) {
-			http.HandleFunc("/", handleCallback)
+			stop := make(chan struct{})
+			http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+				defer close(stop)
+				fmt.Println("Callback handler called!")
+				handleCallback(w, r)
+			})
 
 			go func() {
 				fmt.Printf("Listening on http://%s/\n", PortUrl)
@@ -41,7 +45,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			utils.OpenBrowser(authURL)
 
 			// Keep the program running
-			select {}
+			<-stop
 		},
 	}
 
@@ -67,12 +71,6 @@ func handleCallback(w http.ResponseWriter, r *http.Request) {
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)
-
-	// Optionally: shut down CLI here
-	go func() {
-		log.Println("Shutting down CLI after receiving code")
-		os.Exit(0) // Uncomment if you want it to exit
-	}()
 }
 
 type GetAccessTokenResp struct {

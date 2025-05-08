@@ -1,6 +1,6 @@
 {
   "name": "stytch-cli",
-  "version": "1.0.3",
+  "version": "1.0.12",
   "description": "A CLI for performing Stytch management actions",
   "main": "index.js",
   "scripts": {

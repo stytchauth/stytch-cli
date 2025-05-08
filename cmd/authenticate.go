@@ -17,7 +17,6 @@ import (
 
 const (
 	Scopes        = "openid email profile admin:projects manage:project_settings manage:api_keys"
-	BaseURI       = "stytch.com"
 	serverTimeout = 5 * time.Minute
 )
 
@@ -45,7 +44,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			}
 
 			// Build the authentication URL
-			u, _ := url.Parse("https://" + BaseURI + "/oauth/authorize")
+			u, _ := url.Parse("https://" + internal.BaseURI + "/oauth/authorize")
 			params := u.Query()
 			params.Add("response_type", "code")
 			params.Add("client_id", utils.ClientId)
@@ -103,8 +102,10 @@ func handleCallback(w http.ResponseWriter, r *http.Request, pkceVerifier string)
 	if getAccessTokenResp.AccessToken == "" {
 		log.Fatalf("Failed to get access token")
 	}
-	utils.SaveToken(getAccessTokenResp.AccessToken, utils.AccessToken)
-	utils.SaveToken(getAccessTokenResp.RefreshToken, utils.RefreshToken)
+	err := utils.SaveToken(getAccessTokenResp.AccessToken, utils.AccessToken)
+	if err != nil {
+		log.Fatalf("Failed to save access token: %v", err)
+	}
 
 	// Send 302 redirect to a friendly page (Stytch recommends redirecting away from localhost)
 	http.Redirect(w, r, "https://stytch.com", http.StatusFound)

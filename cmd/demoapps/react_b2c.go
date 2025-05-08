@@ -4,9 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/url"
+	"os"
+	"regexp"
 	"slices"
+	"strings"
 
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -51,8 +55,41 @@ func NewReactB2CSetup() *cobra.Command {
 
 			// Grab public token.
 			projectPublicToken := projectToken(c.Context(), projectID)
-			fmt.Printf("Public token: %s\n", projectPublicToken)
+			writeEnvFile(projectPublicToken)
 		},
+	}
+}
+
+func writeEnvFile(projectPublicToken string) {
+	fmt.Println("✍️ Writing public token to .env.local")
+	// hardcode the path to the example app for now, remove
+	const envFile = "../stytch-react-example/.env.local"
+	const keyForEntry = "REACT_APP_STYTCH_PUBLIC_TOKEN="
+
+	// read in env file if it exists, otherwise create it
+	content, err := os.ReadFile(envFile)
+	// Convert content to string and check for existing token
+	fileContent := string(content)
+	tokenLine := keyForEntry + projectPublicToken + "\n"
+
+	if os.IsNotExist(err) {
+		// Create new file if it doesn't exist
+		err = os.WriteFile(envFile, []byte(tokenLine), fs.ModePerm)
+		if err != nil {
+			log.Fatalf("Failed to create %s file: %v", envFile, err)
+		}
+	} else {
+		// Replace existing token or append if not found
+		if strings.Contains(fileContent, keyForEntry) {
+			fileContent = regexp.MustCompile(keyForEntry+`.*\n`).ReplaceAllString(fileContent, tokenLine)
+		} else {
+			fileContent += tokenLine
+		}
+
+		err = os.WriteFile(envFile, []byte(fileContent), fs.ModePerm)
+		if err != nil {
+			log.Fatalf("Failed to write to %s file: %v", envFile, err)
+		}
 	}
 }
 
@@ -121,17 +158,18 @@ func checkSDKActive(ctx context.Context, projectID string) {
 		log.Fatalf("Unable to retrieve SDK config: %v", err)
 	}
 	updatedCfg := cfgResp.Config
-	if cfgResp.Config.Basic.Enabled {
-		fmt.Println("Frontend SDKs already enabled in your project, skipping.")
-	} else {
-		fmt.Println("Enabling usage of Frontend SDKs in your project...")
-		updatedCfg.Basic.Enabled = true
-	}
+	fmt.Println("Enabling usage of Frontend SDKs in your project...")
+	updatedCfg.Basic.Enabled = true
 
-	if len(cfgResp.Config.Basic.Domains) == 0 {
+	if len(updatedCfg.Basic.Domains) == 0 {
 		fmt.Println("Frontend SDKs does not have domains set, setting to localhost:3000")
-		cfgResp.Config.Basic.Domains = []string{"http://localhost:3000"}
+		updatedCfg.Basic.Domains = []string{"http://localhost:3000"}
 	}
+	// these are very specific to the example app
+	updatedCfg.MagicLinks.LoginOrCreateEnabled = true
+	updatedCfg.MagicLinks.SendEnabled = true
+	updatedCfg.Basic.CreateNewUsers = true
+
 	_, err = internal.MangoClient().SDK.SetConsumerConfig(ctx, sdk.SetConsumerConfigRequest{
 		ProjectID: projectID,
 		Config:    updatedCfg,
@@ -210,7 +248,7 @@ func projectToken(ctx context.Context, projectID string) string {
 
 	for _, token := range getResp.PublicTokens {
 		if token.ProjectID == projectID {
-			return token.ProjectID
+			return token.PublicToken
 		}
 	}
 

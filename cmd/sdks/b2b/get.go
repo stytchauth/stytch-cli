@@ -2,7 +2,6 @@ package b2b
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -24,7 +23,7 @@ func NewGetCommand() *cobra.Command {
 				log.Fatalf("Unable to retrieve B2B SDK config: %v", err)
 			}
 
-			fmt.Printf("B2B SDK Configuration: %+v\n", cfgResp.Config)
+			internal.PrintJSON(cfgResp)
 		},
 	}
 

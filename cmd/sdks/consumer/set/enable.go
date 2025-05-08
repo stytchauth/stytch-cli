@@ -13,7 +13,7 @@ import (
 func NewEnableCommand() *cobra.Command {
 	var projectID string
 	var enabled bool
-
+	var enableAll bool
 	cmd := &cobra.Command{
 		Use:   "enable",
 		Short: "Enable consumer SDK configuration",
@@ -29,6 +29,19 @@ func NewEnableCommand() *cobra.Command {
 			// Update config
 			updatedCfg := cfgResp.Config
 			updatedCfg.Basic.Enabled = enabled
+			if enableAll {
+				updatedCfg.Basic.CreateNewUsers = true
+				updatedCfg.MagicLinks.LoginOrCreateEnabled = true
+				updatedCfg.MagicLinks.SendEnabled = true
+			}
+
+			_, err = internal.MangoClient().SDK.SetConsumerConfig(context.Background(), sdk.SetConsumerConfigRequest{
+				ProjectID: projectID,
+				Config:    updatedCfg,
+			})
+			if err != nil {
+				log.Fatalf("Unable to update SDK config: %v", err)
+			}
 
 			fmt.Println("SDK configuration updated successfully")
 		},
@@ -36,6 +49,7 @@ func NewEnableCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "Project ID")
 	cmd.Flags().BoolVarP(&enabled, "enabled", "e", true, "Enable/disable SDK")
+	cmd.Flags().BoolVarP(&enableAll, "all", "a", false, "Enables standard settings that get enabled from dashboard when you turn on SDKs")
 	_ = cmd.MarkFlagRequired("project-id")
 	_ = cmd.MarkFlagRequired("enabled")
 

@@ -49,7 +49,6 @@ func NewDomainCommand() *cobra.Command {
 	cmd.Flags().StringVarP(&slugPattern, "slug-pattern", "s", "", "Slug pattern")
 	_ = cmd.MarkFlagRequired("project-id")
 	_ = cmd.MarkFlagRequired("domain")
-	_ = cmd.MarkFlagRequired("slug-pattern")
 
 	return cmd
 }

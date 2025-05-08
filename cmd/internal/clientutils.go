@@ -12,8 +12,10 @@ import (
 	"github.com/stytchauth/stytch-cli/utils"
 )
 
-var BaseURI   = "stytch.com"
+// BaseURI is the base domain for Stytch API endpoints
+const BaseURI = "stytch.com"
 
+// MangoClient is a client for the stytch-management-go API
 var MangoClient = sync.OnceValue(func() *api.API {
 	token, err := utils.LoadToken(utils.AccessToken)
 	if err != nil {

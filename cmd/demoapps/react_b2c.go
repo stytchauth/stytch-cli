@@ -63,13 +63,13 @@ func writeEnvFile(projectPublicToken string) {
 	fmt.Println("✍️ Writing public token to .env.local")
 	// hardcode the path to the example app for now, remove
 	envFile := "../stytch-react-example/.env.local"
-	
+
 	// read in env file if it exists, otherwise create it
 	content, err := os.ReadFile(envFile)
 	// Convert content to string and check for existing token
 	fileContent := string(content)
 	tokenLine := "REACT_APP_STYTCH_PUBLIC_TOKEN=" + projectPublicToken + "\n"
-	
+
 	if os.IsNotExist(err) {
 		// Create new file if it doesn't exist
 		if err := os.WriteFile(envFile, []byte(tokenLine), 0600); err != nil {
@@ -82,7 +82,7 @@ func writeEnvFile(projectPublicToken string) {
 		} else {
 			fileContent += tokenLine
 		}
-		
+
 		if err := os.WriteFile(envFile, []byte(fileContent), 0600); err != nil {
 			log.Fatalf("Failed to write to %s file: %v", envFile, err)
 		}
@@ -165,7 +165,7 @@ func checkSDKActive(ctx context.Context, projectID string) {
 	updatedCfg.MagicLinks.LoginOrCreateEnabled = true
 	updatedCfg.MagicLinks.SendEnabled = true
 	updatedCfg.Basic.CreateNewUsers = true
-	
+
 	_, err = internal.MangoClient().SDK.SetConsumerConfig(ctx, sdk.SetConsumerConfigRequest{
 		ProjectID: projectID,
 		Config:    updatedCfg,

@@ -64,13 +64,13 @@ func writeEnvFile(projectPublicToken string) {
 	fmt.Println("✍️ Writing public token to .env.local")
 	// hardcode the path to the example app for now, remove
 	const envFile = "../stytch-react-example/.env.local"
-	const tokenKey = "REACT_APP_STYTCH_PUBLIC_TOKEN="
+	const keyForEntry = "REACT_APP_STYTCH_PUBLIC_TOKEN="
 
 	// read in env file if it exists, otherwise create it
 	content, err := os.ReadFile(envFile)
 	// Convert content to string and check for existing token
 	fileContent := string(content)
-	tokenLine := tokenKey + projectPublicToken + "\n"
+	tokenLine := keyForEntry + projectPublicToken + "\n"
 
 	if os.IsNotExist(err) {
 		// Create new file if it doesn't exist
@@ -80,8 +80,8 @@ func writeEnvFile(projectPublicToken string) {
 		}
 	} else {
 		// Replace existing token or append if not found
-		if strings.Contains(fileContent, tokenKey) {
-			fileContent = regexp.MustCompile(tokenKey+`.*\n`).ReplaceAllString(fileContent, tokenLine)
+		if strings.Contains(fileContent, keyForEntry) {
+			fileContent = regexp.MustCompile(keyForEntry+`.*\n`).ReplaceAllString(fileContent, tokenLine)
 		} else {
 			fileContent += tokenLine
 		}

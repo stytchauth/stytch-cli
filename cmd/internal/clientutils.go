@@ -21,7 +21,7 @@ var MangoClient = sync.OnceValue(func() *api.API {
 	if tokenIsExpired(token) {
 		token = utils.GetAccessTokenFromRefreshToken(token)
 	}
-	return api.NewAccessTokenClient(token, api.WithBaseURI("https://management"+BaseURI))
+	return api.NewAccessTokenClient(token, api.WithBaseURI("https://management."+BaseURI))
 })
 
 func tokenIsExpired(tok string) bool {

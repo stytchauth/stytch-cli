@@ -1,6 +1,6 @@
 {
   "name": "stytch-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A CLI for performing Stytch management actions",
   "main": "index.js",
   "scripts": {
@@ -19,11 +19,11 @@
   },
   "homepage": "https://github.com/stytchauth/stytch-cli#readme",
   "dependencies": {
-    "golang-npm": "^0.1.9"
+    "golang-npm": "^0.0.6"
   },
   "goBinary": {
     "name": "stytch-cli",
     "path": "./bin",
-    "url": "https://github.com/stytchauth/stytch-cli/releases/download/v{{version}}/stytch-cli_{{version}}_{{platform}}_{{arch}}.zip"
+    "url": "https://github.com/stytchauth/stytch-cli/releases/download/v{{version}}/stytch-cli_{{version}}_{{platform}}_{{arch}}.tar.gz"
   }
 }

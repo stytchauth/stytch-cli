@@ -12,17 +12,17 @@ import (
 
 func NewSetCommand() *cobra.Command {
 	var (
-		projectID string
-		enabled   bool
-		domains   []string
+		projectID             string
+		enabled               bool
+		domains               []string
 		createNewUsersEnabled bool
-		magicLinksEnabled bool
+		magicLinksEnabled     bool
 	)
 
 	cmd := &cobra.Command{
 		Use:   "set",
 		Short: "Set SDK configuration for a project",
-		Run: func(cmd *cobra.Command, args []string) {			
+		Run: func(cmd *cobra.Command, args []string) {
 			// Get current config
 			cfgResp, err := internal.MangoClient().SDK.GetConsumerConfig(context.Background(), sdk.GetConsumerConfigRequest{
 				ProjectID: projectID,
@@ -57,8 +57,8 @@ func NewSetCommand() *cobra.Command {
 	cmd.Flags().StringSliceVarP(&domains, "domains", "d", []string{}, "Allowed domains (comma-separated)")
 	cmd.Flags().BoolVarP(&createNewUsersEnabled, "create-new-users", "c", true, "Enable/disable create new users")
 	cmd.Flags().BoolVarP(&magicLinksEnabled, "magic-links", "l", false, "Enable/disable Magic Links login or create and send")
-	
-	cmd.MarkFlagRequired("project-id")
-	cmd.MarkFlagRequired("enabled")
+
+	_ = cmd.MarkFlagRequired("project-id")
+	_ = cmd.MarkFlagRequired("enabled")
 	return cmd
 }

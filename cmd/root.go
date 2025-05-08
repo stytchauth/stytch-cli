@@ -24,6 +24,7 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(project.NewRootCommand())
 	command.AddCommand(NewVersionCommand())
 	command.AddCommand(NewAuthenticateCommand())
+	command.AddCommand(NewLogoutCommand())
 	command.AddCommand(jwttemplates.NewRootCommand())
 	command.AddCommand(passwordstrengthconfig.NewRootCommand())
 	command.AddCommand(redirecturls.NewRootCommand())

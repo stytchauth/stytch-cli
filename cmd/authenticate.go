@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	Scopes  = "openid email profile admin:projects manage:project_settings manage:api_keys"
-	BaseURI = "stytch.com"
+	Scopes        = "openid email profile admin:projects manage:project_settings manage:api_keys"
+	BaseURI       = "stytch.com"
+	serverTimeout = 5 * time.Minute
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -26,6 +27,7 @@ func NewAuthenticateCommand() *cobra.Command {
 		Short: "Start authentication flow via Stytch",
 		Run: func(cmd *cobra.Command, args []string) {
 			stop := make(chan struct{})
+			timer := time.NewTimer(serverTimeout)
 
 			// Generate PKCE pair.
 			verifier, challenge := internal.PKCECodePair()
@@ -54,18 +56,28 @@ func NewAuthenticateCommand() *cobra.Command {
 			u.RawQuery = params.Encode()
 
 			go func() {
-				fmt.Printf("Once authenticated visit: " + "https://stytch.com/oauth/authorize?client_id=connected-app-live-c48152cf-8732-4981-8fd5-e52dd989d75f&code_challenge=YdGskCH87fSqeu6R3tpLdxjl3RTY_z3sEnUO0jGiVD8&code_verifier=mJKzE9M9OQm4J_PuUQaJlyoYLlAMsrXVqH4y0ME7Nic&redirect_uri=http://127.0.0.1:5001&response_type=code&scope=openid+email+profile+admin:projects+manage:project_settings+manage:api_keys" + "\n")
+				fmt.Println("Starting authentication flow...")
+				fmt.Println("\n⚠️ If you do not have an active Stytch session you will be prompted to login ⚠️")
+				fmt.Printf("If this happens, complete the login and then visit the following link to continue the authentication flow:\n\n%s\n\n", u.String())
 				if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
 					fmt.Printf("Server error: %v\n", err)
 					panic(err)
 				}
 			}()
 
+			// Give the user enough time to see the warning message about having an active session
+			// before opening the browser window.
+			time.Sleep(time.Second * 3)
+
 			// Open browser
 			utils.OpenBrowser(u.String())
 
 			// Keep the program running
-			<-stop
+			select {
+			case <-stop:
+			case <-timer.C:
+				log.Fatal("Timed out waiting for authentication flow to complete")
+			}
 
 			// shut down the server
 			if err := server.Shutdown(context.Background()); err != nil {

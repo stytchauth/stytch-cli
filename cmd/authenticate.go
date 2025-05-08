@@ -16,8 +16,9 @@ import (
 )
 
 const (
-	Scopes  = "openid email profile admin:projects manage:project_settings manage:api_keys"
-	BaseURI = "stytch.com"
+	Scopes        = "openid email profile admin:projects manage:project_settings manage:api_keys"
+	BaseURI       = "stytch.com"
+	serverTimeout = 5 * time.Minute
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -26,6 +27,7 @@ func NewAuthenticateCommand() *cobra.Command {
 		Short: "Start authentication flow via Stytch",
 		Run: func(cmd *cobra.Command, args []string) {
 			stop := make(chan struct{})
+			timer := time.NewTimer(serverTimeout)
 
 			// Generate PKCE pair.
 			verifier, challenge := internal.PKCECodePair()
@@ -71,7 +73,11 @@ func NewAuthenticateCommand() *cobra.Command {
 			utils.OpenBrowser(u.String())
 
 			// Keep the program running
-			<-stop
+			select {
+			case <-stop:
+			case <-timer.C:
+				log.Fatal("Timed out waiting for authentication flow to complete")
+			}
 
 			// shut down the server
 			if err := server.Shutdown(context.Background()); err != nil {

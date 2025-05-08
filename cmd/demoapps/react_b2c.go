@@ -66,21 +66,13 @@ func writeEnvFile(projectPublicToken string) {
 	
 	// read in env file if it exists, otherwise create it
 	content, err := os.ReadFile(envFile)
-	if err != nil && !os.IsNotExist(err) {
-		file, err := os.Create(envFile)
-		if err != nil {
-			log.Fatalf("Failed to create %s file: %v", envFile, err)
-		}
-		defer file.Close()
-	}
-
 	// Convert content to string and check for existing token
 	fileContent := string(content)
 	tokenLine := "REACT_APP_STYTCH_PUBLIC_TOKEN=" + projectPublicToken + "\n"
 	
 	if os.IsNotExist(err) {
 		// Create new file if it doesn't exist
-		if err := os.WriteFile(envFile, []byte(tokenLine), 0644); err != nil {
+		if err := os.WriteFile(envFile, []byte(tokenLine), 0600); err != nil {
 			log.Fatalf("Failed to create %s file: %v", envFile, err)
 		}
 	} else {
@@ -91,7 +83,7 @@ func writeEnvFile(projectPublicToken string) {
 			fileContent += tokenLine
 		}
 		
-		if err := os.WriteFile(envFile, []byte(fileContent), 0644); err != nil {
+		if err := os.WriteFile(envFile, []byte(fileContent), 0600); err != nil {
 			log.Fatalf("Failed to write to %s file: %v", envFile, err)
 		}
 	}

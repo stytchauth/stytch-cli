@@ -13,6 +13,7 @@ import (
 )
 
 var BaseURI   = "stytch.com"
+
 var MangoClient = sync.OnceValue(func() *api.API {
 	token, err := utils.LoadToken(utils.AccessToken)
 	if err != nil {

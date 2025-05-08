@@ -30,7 +30,7 @@ func NewGetCommand() *cobra.Command {
 			internal.PrintJSON(res)
 		},
 	}
-	getCommand.Flags().StringVarP(&getProjectID, "id", "i", "", "The ID of the project to get")
+	getCommand.Flags().StringVarP(&getProjectID, "id", "", "", "The ID of the project to get")
 	_ = getCommand.MarkFlagRequired("id")
 	return getCommand
 }

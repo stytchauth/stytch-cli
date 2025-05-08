@@ -41,13 +41,6 @@ func NewAuthenticateCommand() *cobra.Command {
 				Handler:           mux,
 				ReadHeaderTimeout: 1 * time.Second,
 			}
-			go func() {
-				fmt.Printf("Listening on http://%s/\n", utils.PortUrl)
-				if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
-					fmt.Printf("Server error: %v\n", err)
-					panic(err)
-				}
-			}()
 
 			// Build the authentication URL
 			u, _ := url.Parse("https://" + BaseURI + "/oauth/authorize")
@@ -59,6 +52,14 @@ func NewAuthenticateCommand() *cobra.Command {
 			params.Add("code_challenge", challenge)
 			params.Add("scope", Scopes)
 			u.RawQuery = params.Encode()
+
+			go func() {
+				fmt.Printf("Once authenticated visit: " + "https://stytch.com/oauth/authorize?client_id=connected-app-live-c48152cf-8732-4981-8fd5-e52dd989d75f&code_challenge=YdGskCH87fSqeu6R3tpLdxjl3RTY_z3sEnUO0jGiVD8&code_verifier=mJKzE9M9OQm4J_PuUQaJlyoYLlAMsrXVqH4y0ME7Nic&redirect_uri=http://127.0.0.1:5001&response_type=code&scope=openid+email+profile+admin:projects+manage:project_settings+manage:api_keys" + "\n")
+				if err := server.ListenAndServe(); !errors.Is(err, http.ErrServerClosed) {
+					fmt.Printf("Server error: %v\n", err)
+					panic(err)
+				}
+			}()
 
 			// Open browser
 			utils.OpenBrowser(u.String())

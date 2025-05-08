@@ -72,8 +72,7 @@ func writeEnvFile(projectPublicToken string) {
 
 	if os.IsNotExist(err) {
 		// Create new file if it doesn't exist
-		contentToWrite := []byte(tokenLine)
-		err = os.WriteFile(envFile, contentToWrite, 0600)
+		err = os.WriteFile(envFile, []byte(tokenLine), 0644)
 		if err != nil {
 			log.Fatalf("Failed to create %s file: %v", envFile, err)
 		}
@@ -85,8 +84,7 @@ func writeEnvFile(projectPublicToken string) {
 			fileContent += tokenLine
 		}
 
-		contentToWrite := []byte(fileContent)
-		err = os.WriteFile(envFile, contentToWrite, 0600)
+		err = os.WriteFile(envFile, []byte(fileContent), 0644)
 		if err != nil {
 			log.Fatalf("Failed to write to %s file: %v", envFile, err)
 		}

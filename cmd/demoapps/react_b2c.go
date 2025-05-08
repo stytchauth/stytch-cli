@@ -91,6 +91,7 @@ func writeEnvFile(projectPublicToken string) {
 			log.Fatalf("Failed to write to %s file: %v", envFile, err)
 		}
 	}
+	fmt.Println("✅Env file written successfully.")
 }
 
 func createB2CProject(ctx context.Context) projects.Project {
@@ -116,7 +117,7 @@ func createB2CProject(ctx context.Context) projects.Project {
 	if err != nil {
 		log.Fatalf("Unable to create project: %v", err)
 	}
-	fmt.Println("Project created successfully.")
+	fmt.Println("✅Project created successfully.")
 
 	return createResp.Project
 }
@@ -158,7 +159,7 @@ func checkSDKActive(ctx context.Context, projectID string) {
 		log.Fatalf("Unable to retrieve SDK config: %v", err)
 	}
 	updatedCfg := cfgResp.Config
-	fmt.Println("Enabling usage of Frontend SDKs in your project...")
+	fmt.Println("⚠️Enabling usage of Frontend SDKs in your project...")
 	updatedCfg.Basic.Enabled = true
 
 	if len(updatedCfg.Basic.Domains) == 0 {
@@ -177,6 +178,7 @@ func checkSDKActive(ctx context.Context, projectID string) {
 	if err != nil {
 		log.Fatalf("Unable to update SDK config: %v", err)
 	}
+	fmt.Println("✅Frontend SDKs enabled successfully.")
 }
 
 func checkRedirectURLs(ctx context.Context, projectID string) {
@@ -199,7 +201,7 @@ func checkRedirectURLs(ctx context.Context, projectID string) {
 		}
 	}
 	if len(validRedirectURLs) > 0 {
-		fmt.Println("Valid Redirect URLs already configured for this project.")
+		fmt.Println("✅Valid Redirect URLs already configured for this project.")
 		return
 	}
 
@@ -235,7 +237,7 @@ func checkRedirectURLs(ctx context.Context, projectID string) {
 	if err != nil {
 		log.Fatalf("Unable to create redirect URL: %v", err)
 	}
-	fmt.Println("Redirect URL created successfully.")
+	fmt.Println("✅Redirect URL set successfully.")
 }
 
 func projectToken(ctx context.Context, projectID string) string {

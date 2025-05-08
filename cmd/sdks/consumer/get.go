@@ -1,4 +1,4 @@
-package sdks
+package consumer
 
 import (
 	"context"
@@ -28,7 +28,7 @@ func NewGetCommand() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringVarP(&projectID, "project-id", "i", "", "The project ID")
+	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "The project ID")
 	_ = cmd.MarkFlagRequired("project-id")
 	return cmd
 }

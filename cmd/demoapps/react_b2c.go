@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/url"
 	"os"
@@ -72,7 +73,7 @@ func writeEnvFile(projectPublicToken string) {
 
 	if os.IsNotExist(err) {
 		// Create new file if it doesn't exist
-		err = os.WriteFile(envFile, []byte(tokenLine), 0644)
+		err = os.WriteFile(envFile, []byte(tokenLine), fs.FileMode(0644))
 		if err != nil {
 			log.Fatalf("Failed to create %s file: %v", envFile, err)
 		}
@@ -84,7 +85,7 @@ func writeEnvFile(projectPublicToken string) {
 			fileContent += tokenLine
 		}
 
-		err = os.WriteFile(envFile, []byte(fileContent), 0644)
+		err = os.WriteFile(envFile, []byte(fileContent), fs.FileMode(0644))
 		if err != nil {
 			log.Fatalf("Failed to write to %s file: %v", envFile, err)
 		}

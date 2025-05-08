@@ -63,7 +63,7 @@ func NewReactB2CSetup() *cobra.Command {
 func writeEnvFile(projectPublicToken string) {
 	fmt.Println("✍️ Writing public token to .env.local")
 	// hardcode the path to the example app for now, remove
-	const envFile = "../stytch-react-example/.env.local"
+	const envFile = ".env.local"
 	const keyForEntry = "REACT_APP_STYTCH_PUBLIC_TOKEN="
 
 	// read in env file if it exists, otherwise create it

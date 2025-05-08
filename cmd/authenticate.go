@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	Scopes  = "openid email profile project admin:projects offline_access"
+	Scopes  = "openid email profile admin:projects manage:project_settings manage:api_keys"
 	BaseURI = "stytch.com"
 )
 

@@ -63,29 +63,30 @@ func NewReactB2CSetup() *cobra.Command {
 func writeEnvFile(projectPublicToken string) {
 	fmt.Println("✍️ Writing public token to .env.local")
 	// hardcode the path to the example app for now, remove
-	envFile := "../stytch-react-example/.env.local"
+	const envFile = "../stytch-react-example/.env.local"
+	const tokenKey = "REACT_APP_STYTCH_PUBLIC_TOKEN="
 
 	// read in env file if it exists, otherwise create it
 	content, err := os.ReadFile(envFile)
 	// Convert content to string and check for existing token
 	fileContent := string(content)
-	tokenLine := "REACT_APP_STYTCH_PUBLIC_TOKEN=" + projectPublicToken + "\n"
+	tokenLine := tokenKey + projectPublicToken + "\n"
 
 	if os.IsNotExist(err) {
 		// Create new file if it doesn't exist
-		err = os.WriteFile(envFile, []byte(tokenLine), fs.FileMode(0644))
+		err = os.WriteFile(envFile, []byte(tokenLine), fs.ModePerm)
 		if err != nil {
 			log.Fatalf("Failed to create %s file: %v", envFile, err)
 		}
 	} else {
 		// Replace existing token or append if not found
-		if strings.Contains(fileContent, "REACT_APP_STYTCH_PUBLIC_TOKEN=") {
-			fileContent = regexp.MustCompile(`REACT_APP_STYTCH_PUBLIC_TOKEN=.*\n`).ReplaceAllString(fileContent, tokenLine)
+		if strings.Contains(fileContent, tokenKey) {
+			fileContent = regexp.MustCompile(tokenKey+`.*\n`).ReplaceAllString(fileContent, tokenLine)
 		} else {
 			fileContent += tokenLine
 		}
 
-		err = os.WriteFile(envFile, []byte(fileContent), fs.FileMode(0644))
+		err = os.WriteFile(envFile, []byte(fileContent), fs.ModePerm)
 		if err != nil {
 			log.Fatalf("Failed to write to %s file: %v", envFile, err)
 		}

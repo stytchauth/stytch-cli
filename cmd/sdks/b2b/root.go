@@ -15,4 +15,3 @@ func NewB2BRootCommand() *cobra.Command {
 	cmd.AddCommand(set.NewRootCommand())
 	return cmd
 }
-

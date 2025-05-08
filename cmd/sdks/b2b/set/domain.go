@@ -29,7 +29,7 @@ func NewDomainCommand() *cobra.Command {
 			// Update config
 			updatedCfg := cfgResp.Config
 			updatedCfg.Basic.Domains = append(updatedCfg.Basic.Domains, sdk.AuthorizedB2BDomain{
-				Domain: domain,
+				Domain:      domain,
 				SlugPattern: slugPattern,
 			})
 

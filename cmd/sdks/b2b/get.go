@@ -15,7 +15,7 @@ func NewGetCommand() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "get",
 		Short: "Get B2B SDK configuration for a project",
-		Run: func(cmd *cobra.Command, args []string) {			
+		Run: func(cmd *cobra.Command, args []string) {
 			cfgResp, err := internal.MangoClient().SDK.GetB2BConfig(context.Background(), sdk.GetB2BConfigRequest{
 				ProjectID: projectID,
 			})
@@ -29,6 +29,6 @@ func NewGetCommand() *cobra.Command {
 
 	cmd.Flags().StringVarP(&projectID, "project-id", "p", "", "Project ID")
 	_ = cmd.MarkFlagRequired("project-id")
-	
+
 	return cmd
 }

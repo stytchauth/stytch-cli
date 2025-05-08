@@ -21,8 +21,7 @@ const (
 	PortUrl   = "127.0.0.1:5001"
 	ClientId  = "connected-app-live-c48152cf-8732-4981-8fd5-e52dd989d75f"
 	ProjectId = "project-live-9a6d7e6f-d787-4ec5-8edb-e1eb5b180d77"
-	Scopes    = "openid email profile admin:projects manage:project_settings"
-	BaseURI   = "stytch.com"
+	Scopes    = "openid email profile admin:projects manage:project_settings manage:api_keys"
 )
 
 func NewAuthenticateCommand() *cobra.Command {
@@ -55,7 +54,7 @@ func NewAuthenticateCommand() *cobra.Command {
 			}()
 
 			// Build the authentication URL
-			u, _ := url.Parse("https://" + BaseURI + "/oauth/authorize")
+			u, _ := url.Parse("https://" + internal.BaseURI + "/oauth/authorize")
 			params := u.Query()
 			params.Add("response_type", "code")
 			params.Add("client_id", ClientId)
@@ -109,7 +108,7 @@ type GetAccessTokenResp struct {
 func getAccessTokenFromCode(code string, pkceVerifier string) string {
 	// make request to stytch with code to get access token
 	// store the access token/refresh token locally
-	tokenUrl := fmt.Sprintf("https://api."+BaseURI+"/v1/public/%s/oauth2/token", ProjectId)
+	tokenUrl := fmt.Sprintf("https://api."+internal.BaseURI+"/v1/public/%s/oauth2/token", ProjectId)
 	requestBody := map[string]interface{}{
 		"client_id":     ClientId,
 		"redirect_uri":  fmt.Sprintf("http://%s", PortUrl),

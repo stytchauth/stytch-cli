@@ -31,7 +31,7 @@ func NewDeleteCommand() *cobra.Command {
 			fmt.Printf("Project %s deleted successfully.\n", projectID)
 		},
 	}
-	deleteCommand.Flags().StringVarP(&projectID, "id", "i", "", "The ID of the project to delete")
+	deleteCommand.Flags().StringVarP(&projectID, "id", "", "", "The ID of the project to delete")
 	_ = deleteCommand.MarkFlagRequired("id")
 	return deleteCommand
 }

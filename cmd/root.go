@@ -10,6 +10,7 @@ import (
 	project "github.com/stytchauth/stytch-cli/cmd/projects"
 	"github.com/stytchauth/stytch-cli/cmd/publictokens"
 	"github.com/stytchauth/stytch-cli/cmd/redirecturls"
+	"github.com/stytchauth/stytch-cli/cmd/sdks"
 	"github.com/stytchauth/stytch-cli/cmd/secrets"
 )
 
@@ -30,6 +31,7 @@ func NewRootCommand() *cobra.Command {
 	command.AddCommand(publictokens.NewRootCommand())
 	command.AddCommand(secrets.NewRootCommand())
 	command.AddCommand(demoapps.NewReactB2CSetup())
+	command.AddCommand(sdks.NewRootCommand())
 
 	return command
 }
